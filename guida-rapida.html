@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guida Rapida - Analizzatore Manuali</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-indigo-900 mb-2">
+                <i class="fas fa-question-circle mr-3"></i>
+                Guida Rapida
+            </h1>
+            <p class="text-lg text-gray-600">Come utilizzare l'Analizzatore Manuali Universitari</p>
+        </header>
+
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+            <h2 class="text-2xl font-bold text-indigo-800 mb-4 flex items-center">
+                <i class="fas fa-play-circle mr-3"></i>
+                Inizio Rapido in 5 Passi
+            </h2>
+
+            <div class="space-y-6">
+                <!-- Passo 1 -->
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-indigo-800 font-bold text-xl">
+                            1
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Ottieni Chiave API OpenAI</h3>
+                        <p class="text-gray-600 mb-2">
+                            Vai su <a href="https://platform.openai.com/api-keys" target="_blank" class="text-blue-600 underline">platform.openai.com/api-keys</a>
+                        </p>
+                        <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                            <li>Crea un account (se non ce l'hai)</li>
+                            <li>Clicca "Create new secret key"</li>
+                            <li>Copia la chiave (inizia con "sk-...")</li>
+                            <li>Assicurati di avere credito disponibile</li>
+                        </ul>
+                        <div class="mt-2 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-sm">
+                            <strong>💰 Costo:</strong> Circa €0.01-0.10 per analisi (dipende dalla lunghezza)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 2 -->
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-indigo-800 font-bold text-xl">
+                            2
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Prepara il Framework CSV</h3>
+                        <p class="text-gray-600 mb-2">
+                            Crea un file CSV con il framework di valutazione
+                        </p>
+                        <div class="bg-gray-100 p-3 rounded text-xs font-mono overflow-x-auto">
+Materia,Argomento,Dettagli,Classi_Laurea,Livello<br>
+Fisica,Meccanica,Cinematica,"L-30, L-31",Base<br>
+Fisica,Termodinamica,Primo principio,"L-30",Intermedio
+                        </div>
+                        <p class="mt-2 text-sm text-gray-600">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Puoi usare qualsiasi struttura di colonne. Vedi <code class="bg-gray-200 px-2 py-1 rounded">esempio-framework.csv</code>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Passo 3 -->
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-indigo-800 font-bold text-xl">
+                            3
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Estrai Indici in PDF</h3>
+                        <p class="text-gray-600 mb-2">
+                            Prepara l'indice dettagliato del manuale
+                        </p>
+                        <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                            <li>Estrai solo le pagine dell'indice dal manuale</li>
+                            <li>Salva come PDF (assicurati che il testo sia selezionabile)</li>
+                            <li>Per corsi multi-volume: prepara 2 PDF separati</li>
+                        </ul>
+                        <div class="mt-2 p-3 bg-blue-50 border-l-4 border-blue-400 text-sm">
+                            <strong>💡 Consiglio:</strong> Più l'indice è dettagliato, più precisa sarà l'analisi
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passo 4 -->
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-indigo-800 font-bold text-xl">
+                            4
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Usa l'Applicazione</h3>
+                        <p class="text-gray-600 mb-2">
+                            Apri <code class="bg-gray-200 px-2 py-1 rounded">index.html</code> nel browser
+                        </p>
+                        <ol class="list-decimal list-inside text-sm text-gray-600 space-y-1">
+                            <li>Inserisci la chiave API e verifica</li>
+                            <li>Carica framework CSV e indici PDF</li>
+                            <li>Seleziona tipo di analisi (A o B)</li>
+                            <li>Clicca "Avvia Analisi"</li>
+                            <li>Attendi 1-3 minuti</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Passo 5 -->
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-indigo-100 text-indigo-800 font-bold text-xl">
+                            5
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Esporta i Risultati</h3>
+                        <p class="text-gray-600 mb-2">
+                            Salva l'analisi per usi futuri
+                        </p>
+                        <div class="flex gap-3">
+                            <button class="px-4 py-2 bg-green-600 text-white rounded text-sm">
+                                <i class="fas fa-download mr-2"></i>Esporta Markdown
+                            </button>
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded text-sm">
+                                <i class="fas fa-file-code mr-2"></i>Esporta HTML
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tipi di Analisi -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+            <h2 class="text-2xl font-bold text-indigo-800 mb-4 flex items-center">
+                <i class="fas fa-chart-pie mr-3"></i>
+                Quale Tipo di Analisi Scegliere?
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="border-2 border-indigo-200 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold text-indigo-700 mb-3">
+                        <i class="fas fa-list-check mr-2"></i>
+                        Tipo A - Analisi Generale
+                    </h3>
+                    <p class="text-gray-600 mb-3">
+                        Valutazione complessiva del manuale rispetto al framework
+                    </p>
+                    <h4 class="font-semibold text-gray-800 mb-2">Cosa include:</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1 mb-3">
+                        <li>Copertura argomenti</li>
+                        <li>Lacune identificate</li>
+                        <li>Punti di forza</li>
+                        <li>Organizzazione didattica</li>
+                        <li>Valutazione 1-10</li>
+                    </ul>
+                    <div class="p-3 bg-green-50 border-l-4 border-green-400 text-sm">
+                        <strong>✅ Usa quando:</strong> vuoi una prima valutazione o devi confrontare manuali
+                    </div>
+                </div>
+
+                <div class="border-2 border-purple-200 rounded-lg p-6">
+                    <h3 class="text-xl font-semibold text-purple-700 mb-3">
+                        <i class="fas fa-graduation-cap mr-2"></i>
+                        Tipo B - Per Classi di Laurea
+                    </h3>
+                    <p class="text-gray-600 mb-3">
+                        Valutazione specifica per ogni classe di laurea
+                    </p>
+                    <h4 class="font-semibold text-gray-800 mb-2">Cosa include:</h4>
+                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1 mb-3">
+                        <li>Adeguatezza per classe</li>
+                        <li>Argomenti rilevanti/mancanti</li>
+                        <li>Raccomandazioni d'uso</li>
+                        <li>Valutazione per classe</li>
+                        <li>Confronto tra classi</li>
+                    </ul>
+                    <div class="p-3 bg-green-50 border-l-4 border-green-400 text-sm">
+                        <strong>✅ Usa quando:</strong> devi adottare per corsi specifici o personalizzare la didattica
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+            <h2 class="text-2xl font-bold text-indigo-800 mb-4 flex items-center">
+                <i class="fas fa-question-circle mr-3"></i>
+                Domande Frequenti
+            </h2>
+
+            <div class="space-y-4">
+                <div class="border-l-4 border-indigo-400 pl-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">
+                        La mia chiave API è al sicuro?
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                        Sì! La chiave viene utilizzata solo nel tuo browser e non viene mai inviata a server esterni (eccetto OpenAI). 
+                        È salvata solo nella sessione del browser e viene cancellata quando chiudi la scheda.
+                    </p>
+                </div>
+
+                <div class="border-l-4 border-indigo-400 pl-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">
+                        Quanto costa ogni analisi?
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                        Dipende dalla lunghezza degli indici. In media: €0.01-0.05 per analisi brevi, €0.05-0.20 per analisi lunghe.
+                        Il modello usato è GPT-4o (più economico di GPT-4).
+                    </p>
+                </div>
+
+                <div class="border-l-4 border-indigo-400 pl-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">
+                        Quanto tempo richiede un'analisi?
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                        Tipicamente 1-3 minuti, a seconda della complessità. Analisi molto dettagliate possono richiedere fino a 5 minuti.
+                    </p>
+                </div>
+
+                <div class="border-l-4 border-indigo-400 pl-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">
+                        Posso analizzare manuali in altre lingue?
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                        Sì! L'analisi viene sempre fornita in italiano, ma puoi caricare indici in qualsiasi lingua.
+                    </p>
+                </div>
+
+                <div class="border-l-4 border-indigo-400 pl-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">
+                        Il PDF non viene letto correttamente
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                        Assicurati che il PDF contenga testo selezionabile (non immagini scannerizzate). 
+                        Se è una scansione, usa un software OCR per convertirlo prima.
+                    </p>
+                </div>
+
+                <div class="border-l-4 border-indigo-400 pl-4">
+                    <h3 class="font-semibold text-gray-800 mb-1">
+                        Posso usare l'app offline?
+                    </h3>
+                    <p class="text-sm text-gray-600">
+                        L'interfaccia funziona offline dopo il primo caricamento, ma serve connessione internet per chiamare l'API OpenAI.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Esempi -->
+        <div class="bg-white rounded-lg shadow-lg p-8 mb-6">
+            <h2 class="text-2xl font-bold text-indigo-800 mb-4 flex items-center">
+                <i class="fas fa-lightbulb mr-3"></i>
+                Casi d'Uso Tipici
+            </h2>
+
+            <div class="space-y-4">
+                <div class="p-4 bg-blue-50 rounded-lg">
+                    <h3 class="font-semibold text-blue-900 mb-2">
+                        📘 Valutazione Nuovo Manuale
+                    </h3>
+                    <p class="text-sm text-gray-700">
+                        Un autore propone un nuovo manuale di Fisica. Usa <strong>Tipo A</strong> per verificare se copre 
+                        tutti gli argomenti del tuo framework e identificare eventuali lacune prima della pubblicazione.
+                    </p>
+                </div>
+
+                <div class="p-4 bg-green-50 rounded-lg">
+                    <h3 class="font-semibold text-green-900 mb-2">
+                        🎓 Scelta per Corso Specifico
+                    </h3>
+                    <p class="text-sm text-gray-700">
+                        Devi consigliare un manuale per il corso di Analisi Matematica per L-35. Usa <strong>Tipo B</strong> per 
+                        vedere quale testo è più adatto specificamente per quella classe di laurea.
+                    </p>
+                </div>
+
+                <div class="p-4 bg-purple-50 rounded-lg">
+                    <h3 class="font-semibold text-purple-900 mb-2">
+                        📚 Confronto Multi-Volume
+                    </h3>
+                    <p class="text-sm text-gray-700">
+                        Hai un manuale diviso in Fisica 1 e Fisica 2. Carica entrambi gli indici (spunta "2 volumi") e 
+                        usa <strong>Tipo A</strong> per valutare la copertura complessiva del corso biennale.
+                    </p>
+                </div>
+
+                <div class="p-4 bg-yellow-50 rounded-lg">
+                    <h3 class="font-semibold text-yellow-900 mb-2">
+                        🔄 Aggiornamento Edizione
+                    </h3>
+                    <p class="text-sm text-gray-700">
+                        Confronta la vecchia e la nuova edizione analizzandole separatamente con <strong>Tipo A</strong>, 
+                        poi confronta i risultati per vedere i miglioramenti.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-gray-600 text-sm">
+            <p>
+                <i class="fas fa-arrow-left mr-2"></i>
+                <a href="index.html" class="text-indigo-600 underline">Torna all'Applicazione</a>
+            </p>
+            <p class="mt-2">© 2025 Zanichelli Editore</p>
+        </div>
+    </div>
+</body>
+</html>

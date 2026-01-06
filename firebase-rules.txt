@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Collection: analyses
+    match /analyses/{analysisId} {
+      // VIEWER APP: Può solo LEGGERE analisi pubblicate
+      allow read: if resource.data.pubblicata == true;
+      
+      // ADMIN APP: Può SCRIVERE/MODIFICARE/ELIMINARE tutte le analisi
+      // Per ora: accesso aperto per la tua Admin App
+      // TODO: Aggiungere autenticazione admin in futuro
+      allow write: if true;
+    }
+    
+    // Collection: stats (statistiche visualizzazioni)
+    match /stats/{statId} {
+      // Tutti possono aggiornare statistiche (incremento views)
+      allow read, write: if true;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+# File utente
+*.pdf
+# Indici manuali
+Atkins_Principi_Zanichelli.pdf
+Kotz_Edises.pdf
+Atkins_Principi VS Classi_laurea.pdf
+Kotz_Edises VS classi_laurea.pdf
+*.csv
+
+# Eccetto esempi
+!esempio-framework.csv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Backup
+*.bak
+*~

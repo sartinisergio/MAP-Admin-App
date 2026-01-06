@@ -1,0 +1,17 @@
+Materia,Argomento,Dettagli,Classi_Laurea,Livello,Note
+Fisica,Meccanica,Cinematica del punto materiale,"L-30, L-31",Base,Fondamentale per tutti i corsi
+Fisica,Meccanica,Dinamica del punto materiale,"L-30, L-31",Base,Leggi di Newton e applicazioni
+Fisica,Meccanica,Lavoro ed energia,"L-30, L-31, L-27",Intermedio,Teorema dell'energia cinetica
+Fisica,Meccanica,Sistemi di particelle,"L-30, L-31",Avanzato,Centro di massa e quantità di moto
+Fisica,Meccanica,Corpo rigido,"L-30, L-31",Avanzato,Rotazioni e momento d'inerzia
+Fisica,Termodinamica,Temperatura e calore,"L-30, L-31, L-27",Base,Principi fondamentali
+Fisica,Termodinamica,Primo principio,"L-30, L-31",Intermedio,Conservazione dell'energia
+Fisica,Termodinamica,Secondo principio,"L-30, L-31",Avanzato,Entropia e trasformazioni
+Fisica,Elettromagnetismo,Elettrostatica,"L-30, L-31",Base,Legge di Coulomb e campo elettrico
+Fisica,Elettromagnetismo,Correnti elettriche,"L-30, L-31, L-27",Intermedio,Leggi di Ohm e circuiti
+Fisica,Elettromagnetismo,Magnetismo,"L-30, L-31",Intermedio,Campo magnetico e forza di Lorentz
+Fisica,Elettromagnetismo,Induzione elettromagnetica,"L-30, L-31",Avanzato,Legge di Faraday
+Fisica,Ottica,Ottica geometrica,"L-30, L-31, L-27",Base,Riflessione e rifrazione
+Fisica,Ottica,Ottica ondulatoria,"L-30, L-31",Avanzato,Interferenza e diffrazione
+Fisica,Fisica Moderna,Relatività ristretta,"L-30, L-31",Avanzato,Trasformazioni di Lorentz
+Fisica,Fisica Moderna,Fisica quantistica,"L-30, L-31",Avanzato,Dualismo onda-particella

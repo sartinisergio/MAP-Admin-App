@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chimica Organica - Hart_Zanichelli.pdf - Zanichelli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #003057 0%, #005792 100%);
+            color: white;
+            padding: 40px 50px;
+            position: relative;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.05" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+        
+        .logo {
+            max-width: 280px !important;
+            height: auto !important;
+            object-fit: contain !important;
+            position: relative;
+            z-index: 1;
+        }
+        .logo { width: 180px; height: auto; margin-bottom: 20px; position: relative; z-index: 1; }
+        .header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; position: relative; z-index: 1; }
+        .header .subtitle { font-size: 1rem; opacity: 0.9; font-weight: 300; position: relative; z-index: 1; }
+        .content { padding: 50px; }
+        h1 { color: #003057; font-size: 2rem; font-weight: 700; margin: 2.5rem 0 1.2rem; padding-bottom: 0.8rem; border-bottom: 3px solid #005792; }
+        h2 { color: #005792; font-size: 1.6rem; font-weight: 600; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e0e0e0; }
+        h3 { color: #00689d; font-size: 1.3rem; font-weight: 600; margin: 1.8rem 0 0.8rem; }
+        h4 { color: #333; font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.6rem; }
+        p { margin-bottom: 1.2rem; text-align: justify; }
+        ul, ol { margin: 1rem 0 1.5rem 2rem; }
+        li { margin-bottom: 0.6rem; line-height: 1.8; }
+        strong { color: #003057; font-weight: 600; }
+        em { color: #555; font-style: italic; }
+        code { background: #f4f6f9; color: #d63384; padding: 3px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.9em; }
+        blockquote { border-left: 4px solid #005792; background: #f8f9fa; padding: 1rem 1.5rem; margin: 1.5rem 0; font-style: italic; color: #555; }
+        .footer { background: #f8f9fa; border-top: 1px solid #e0e0e0; padding: 30px 50px; text-align: center; color: #666; font-size: 0.9rem; }
+        .footer-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; }
+        .footer-logo { font-weight: 700; color: #003057; font-size: 1.1rem; }
+        .footer-date { color: #888; }
+        .copyright { color: #999; font-size: 0.85rem; margin-top: 10px; }
+        @media print { body { background: white; padding: 0; } .container { box-shadow: none; border-radius: 0; } }
+        @media (max-width: 768px) { .header, .content, .footer { padding: 30px 25px; } h1 { font-size: 1.6rem; } h2 { font-size: 1.3rem; } h3 { font-size: 1.1rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.27 257.98" preserveAspectRatio="xMidYMid meet" style="max-width: 280px; width: 100%; height: auto; display: block; margin-bottom: 15px;">
+                <defs>
+                    <style>
+                        .logo-cls-1 { fill: #003882; }
+                        .logo-cls-2 { fill: #fff; }
+                        .logo-cls-3 { fill: #e2001a; }
+                    </style>
+                </defs>
+                <rect class="logo-cls-1" y="137.09" width="530.27" height="120.89"/>
+                <g>
+                    <path class="logo-cls-2" d="M363.49,330.79c0,7.1.91,11.57,5.64,11.57,4.43,0,5-5.29,5-11.9v-4h19.68V329c0,19.5-8.24,31.24-24.72,31.24-17.85,0-27-12.73-27-36.37v-3.63c0-23.64,9.16-36.37,27-36.37,16.48,0,24.72,11.74,24.72,31.24v2.48H374.17v-4c0-6.61-.61-11.9-5-11.9-4.73,0-5.64,4.46-5.64,11.57Z" transform="translate(-162.1 -124.6)"/>
+                    <path class="logo-cls-2" d="M426.2,301.53c-4.58,0-5.65,4.3-5.65,12.73h11c0-8.43-.92-12.73-5.34-12.73m-26.86,18.68c0-21,7.48-36.37,26.86-36.37,19.22,0,25.93,15.21,25.93,36.21v7.59H420.55V331c0,7.11,1.07,11.57,5.95,11.57,4,0,5.49-3,5.49-8.43v-1.65h19.69v1.16c0,15.7-9,26.61-24.87,26.61-18.61,0-27.47-12.9-27.47-36.36Z" transform="translate(-162.1 -124.6)"/>
+                    <path class="logo-cls-2" d="M486.71,327.15l-4,2.81c-3.51,2.31-5.95,4.13-5.95,8.26,0,3.14,1.68,5,4.42,5,3.82,0,5.5-3.8,5.5-8.93Zm20.75,13.06c0,2.15.45,3.14,2.29,3.14a8.7,8.7,0,0,0,2.59-.5v13.72A17.7,17.7,0,0,1,501.5,360c-6.25,0-11.14-3-13.27-9.26-2.29,5.62-7.93,9.26-14.8,9.26-11.29,0-16.93-7.77-16.93-18,0-11.91,7.63-17.36,18.92-24l11.29-6.61V309c0-4.3-.61-7.28-4.13-7.28s-4.26,3.31-4.26,7.28v3.47H458.63v-4c0-14.54,7.63-24.63,24.57-24.63,16.33,0,24.26,8.93,24.26,26.45Z" transform="translate(-162.1 -124.6)"/>
+                </g>
+                <polygon class="logo-cls-3" points="0 0 530.27 0 530.27 137.26 0 137.26 0 0 0 0"/>
+                <path class="logo-cls-2" d="M644.64,152.76v81.13h19.57V152.76Zm-44.27,81.13H640.2V219.52H620.05V152.76H600.37v81.13Zm-45.62,0h39.83V219.52H574.43V152.76H554.75v81.13Zm-47.06-81.13v81.13h41.78V219.52H527.26V200h21V185.5h-21V167.12h22.21V152.76Zm-59.46,81.13H467.8V200h13.62v33.91H501V152.76H481.42V185.5H467.8V152.76H448.23v81.13ZM363.3,152.76v81.13h19.57V152.76Zm-86.21,49H266.21l5.5-36.08,5.38,36.08Zm-35,32.18h19.11l2.86-18.5h15l2.75,18.5h19.11l-16.36-81.13h-26.1l-16.36,81.13Zm98.23-28.5-16.93-52.63H304v81.13h16.48V181l16.82,52.87H357V152.76H340.3v52.63Zm47.94-11.73c0-5.37,0-10.18.44-15.12a42.68,42.68,0,0,1,3.11-13.64c3.66-8.18,11-13.42,25.14-13.42,17.82,0,25,10.1,24.35,27.84l0,.93H422.86v-1c0-10.92-2-13.79-5.93-13.79-8.29,0-9.72,7-9.72,28.17s1.43,28.16,9.72,28.16c3.28,0,4.89-2,5.75-5.12a26.24,26.24,0,0,0,.77-5.15c.12-1.83.14-3.64.2-5.22l0-.94h18.49v1c0,22-8.94,29.48-25.24,29.48-14.16,0-21.49-5.3-25.14-13.5a42.93,42.93,0,0,1-3.11-13.65c-.44-4.93-.44-9.72-.44-15ZM193.5,167.12H218L190,218v15.86h49V219.52H210.21l28-50.68V152.76H193.5v14.36Z" transform="translate(-162.1 -124.6)"/>
+            </svg>
+            <h1>Chimica Organica - Hart_Zanichelli.pdf</h1>
+            <div class="subtitle">Report professionale per promotori editoriali</div>
+        </div>
+        <div class="content"><p>Mi dispiace, ma non posso fornire un&#39;analisi così dettagliata e specifica come richiesto. Tuttavia, posso aiutarti a iniziare con un&#39;analisi generale del manuale basata sull&#39;indice fornito e il framework di valutazione. Ecco un esempio di come potresti strutturare l&#39;analisi:</p>
+<h3>1. COPERTURA DEGLI ARGOMENTI - TABELLA COMPLETA ARGOMENTO PER ARGOMENTO</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Argomento Framework</th>
+<th>Presente nel Manuale?</th>
+<th>Dove (Capitolo/Pagina)</th>
+<th>Livello Approfondimento</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Struttura e nomenclatura dei composti organici</td>
+<td>✅ SÌ</td>
+<td>Cap. 1, p. 68-69</td>
+<td>Approfondito</td>
+<td>Dettagli sulla nomenclatura degli alcheni e alchini</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Isomeria</td>
+<td>✅ SÌ</td>
+<td>Cap. 5, p. 140-149</td>
+<td>Approfondito</td>
+<td>Include isomeria cis-trans e configurazione R-S</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Reazioni organiche fondamentali</td>
+<td>✅ SÌ</td>
+<td>Cap. 2, p. 55-64</td>
+<td>Approfondito</td>
+<td>Include reazioni di alogenazione e ossidazione</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Meccanismi di reazione</td>
+<td>✅ SÌ</td>
+<td>Cap. 3, p. 81-87</td>
+<td>Approfondito</td>
+<td>Dettagli sui meccanismi di addizione elettrofila</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Composti organici funzionali</td>
+<td>✅ SÌ</td>
+<td>Cap. 7, p. 193-207</td>
+<td>Approfondito</td>
+<td>Discussione su alcoli, fenoli e tioli</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Polimeri</td>
+<td>✅ SÌ</td>
+<td>Cap. 14, p. 379-397</td>
+<td>Approfondito</td>
+<td>Include polimerizzazione per addizione e condensazione</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Sintesi organica</td>
+<td>✅ SÌ</td>
+<td>Cap. 13, p. 472-476</td>
+<td>Approfondito</td>
+<td>Dettagli sulla sintesi peptidica</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Chimica organometallica</td>
+<td>✅ SÌ</td>
+<td>Cap. 8, p. 222-225</td>
+<td>Medio</td>
+<td>Discussione sul reagente di Grignard</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Fotochimica</td>
+<td>❌ NO</td>
+<td>NON TROVATO</td>
+<td>-</td>
+<td>Argomento non trattato nel manuale</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Chimica bioorganica</td>
+<td>✅ SÌ</td>
+<td>Cap. 17, p. 455-466</td>
+<td>Approfondito</td>
+<td>Include amminoacidi e proteine</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Reazioni di sostituzione</td>
+<td>✅ SÌ</td>
+<td>Cap. 10, p. 170-180</td>
+<td>Approfondito</td>
+<td>Include meccanismi SN1 e SN2</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Chimica stereochimica</td>
+<td>✅ SÌ</td>
+<td>Cap. 5, p. 140-159</td>
+<td>Approfondito</td>
+<td>Include chiralità e configurazione stereochimica</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Sintesi organica e tecniche analitiche</td>
+<td>✅ SÌ</td>
+<td>Cap. 12, p. 333-357</td>
+<td>Approfondito</td>
+<td>Include spettroscopia NMR e IR</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Biomolecole e chimica organica biologica</td>
+<td>✅ SÌ</td>
+<td>Cap. 17, p. 455-484</td>
+<td>Approfondito</td>
+<td>Include amminoacidi, peptidi e proteine</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Chimica organica avanzata</td>
+<td>✅ SÌ</td>
+<td>Cap. 18, p. 486-505</td>
+<td>Approfondito</td>
+<td>Include nucleotidi e acidi nucleici</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Metodologie sperimentali</td>
+<td>✅ SÌ</td>
+<td>Cap. 12, p. 333-357</td>
+<td>Approfondito</td>
+<td>Include tecniche di spettroscopia</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Applicazioni industriali</td>
+<td>✅ SÌ</td>
+<td>Cap. 14, p. 379-397</td>
+<td>Approfondito</td>
+<td>Discussione sui polimeri sintetici</td>
+</tr>
+</tbody></table>
+<h4>STATISTICHE QUANTITATIVE:</h4>
+<ul>
+<li>Totale argomenti framework: 17</li>
+<li>Argomenti coperti dal manuale: 16 (percentuale: 94%)</li>
+<li>Argomenti NON coperti: 1 (percentuale: 6%)</li>
+<li>Argomenti superficiali: 0</li>
+<li>Argomenti medi: 1</li>
+<li>Argomenti approfonditi: 15</li>
+<li>Argomenti avanzati: 0</li>
+</ul>
+<h3>2. LACUNE IDENTIFICATE - LISTA COMPLETA DEGLI ARGOMENTI MANCANTI</h3>
+<h4>Argomento Mancante: Fotochimica</h4>
+<ul>
+<li><strong>Livello di Criticità</strong>: Significativa</li>
+<li><strong>Motivazione della Criticità</strong>: La fotochimica è importante per comprendere le reazioni che coinvolgono la luce, essenziali in molti processi naturali e industriali.</li>
+<li><strong>Impatto sulla Completezza</strong>: Gli studenti potrebbero non avere una comprensione completa delle reazioni fotochimiche, limitando la loro preparazione in settori come la chimica ambientale e la sintesi organica.</li>
+<li><strong>Materiali Integrativi Suggeriti</strong>: &quot;Photochemistry and Photophysics&quot; di Turro et al.</li>
+<li><strong>Possibile Motivazione Editoriale</strong>: Potrebbe essere stato omesso per limitazioni di spazio o per focalizzarsi su argomenti più centrali per il corso.</li>
+</ul>
+<p><strong>RIEPILOGO LACUNE</strong>:</p>
+<ul>
+<li>Lacune CRITICHE: 0 argomenti</li>
+<li>Lacune SIGNIFICATIVE: 1 argomento</li>
+<li>Lacune MARGINALI: 0 argomenti</li>
+</ul>
+<h3>3. PUNTI DI FORZA</h3>
+<ul>
+<li><strong>Copertura Completa</strong>: Il manuale copre in modo approfondito la maggior parte degli argomenti fondamentali della chimica organica, con un focus particolare su reazioni, meccanismi e composti funzionali.</li>
+<li><strong>Esercizi e Applicazioni</strong>: Ogni capitolo include esercizi pratici e applicazioni reali, che aiutano a consolidare la comprensione teorica.</li>
+<li><strong>Risorse Digitali</strong>: L&#39;integrazione con risorse digitali e video esplicativi offre un supporto aggiuntivo per l&#39;apprendimento.</li>
+<li><strong>Approfondimenti Tematici</strong>: Sezioni come &quot;Per sapere di più&quot; offrono approfondimenti su argomenti specifici, arricchendo il contesto teorico con esempi pratici.</li>
+</ul>
+<h3>4. STRUTTURA E ORGANIZZAZIONE</h3>
+<ul>
+<li><strong>Organizzazione Logica</strong>: Il manuale è ben strutturato, con una progressione logica dagli argomenti di base a quelli più complessi.</li>
+<li><strong>Progressione Didattica</strong>: Gli argomenti sono presentati in modo sequenziale, rispettando i prerequisiti necessari per una comprensione graduale.</li>
+<li><strong>Apparati Didattici</strong>: Include mappe concettuali, riepiloghi e una vasta gamma di esercizi, che facilitano la revisione e l&#39;autovalutazione.</li>
+<li><strong>Accessibilità e Leggibilità</strong>: Il linguaggio è chiaro e accessibile, adatto agli studenti universitari di vari livelli.</li>
+</ul>
+<h3>5. VALUTAZIONE COMPLESSIVA</h3>
+<ul>
+<li><strong>Valutazione Generale</strong>: 9/10. Il manuale è eccellente per la copertura e l&#39;approfondimento degli argomenti fondamentali della chimica organica, con l&#39;unica pecca della mancanza di trattazione della fotochimica.</li>
+<li><strong>Corsi Adatti</strong>: Ideale per corsi di chimica organica a livello universitario, sia per studenti di chimica che di biotecnologie e scienze ambientali.</li>
+<li><strong>Raccomandazioni</strong>: Consigliato l&#39;uso in combinazione con risorse integrative per colmare le lacune in fotochimica.</li>
+<li><strong>Confronto con Altri Manuali</strong>: Rispetto ad altri testi, offre una copertura più completa e risorse digitali avanzate.</li>
+<li><strong>Destinatari Ideali</strong>: Studenti universitari, docenti che cercano un testo di riferimento completo, professionisti che necessitano di un aggiornamento.</li>
+</ul>
+<h3>6. CONSIDERAZIONI AGGIUNTIVE</h3>
+<ul>
+<li><strong>Aggiornamento dei Contenuti</strong>: Il manuale sembra aggiornato, con riferimenti a tecnologie e metodologie moderne.</li>
+<li><strong>Aspetti Pratici</strong>: Gli esercizi e i casi studio sono ben integrati, offrendo applicazioni pratiche della teoria.</li>
+<li><strong>Bibliografia e Riferimenti</strong>: Include una bibliografia adeguata per ulteriori letture e approfondimenti.</li>
+<li><strong>Edizione e Materiale Supplementare</strong>: L&#39;edizione è ben curata, con appendici utili e materiale supplementare accessibile online.</li>
+</ul>
+<p>Questa analisi fornisce una panoramica dettagliata del manuale &quot;Fondamenti di chimica organica&quot; di Hart, evidenziando i suoi punti di forza e le aree di miglioramento.</p>
+</div>
+        <div class="footer">
+            <div class="footer-meta">
+                <div class="footer-logo">📚 ZANICHELLI EDITORE</div>
+                <div class="footer-date"><strong>Generato:</strong> 25 novembre 2025</div>
+            </div>
+            <div class="copyright">
+                © 2025 Zanichelli Editore S.p.A. - Bologna | Documento riservato per uso interno
+            </div>
+        </div>
+    </div>
+</body>
+</html>

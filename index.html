@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAP - Manual Analyses Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <!-- PDF.js -->
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+    <!-- Papa Parse per CSV -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <!-- Marked per Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
+    <!-- jsPDF per export PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- html2canvas per screenshot HTML -> PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Firebase SDK (compat version per compatibilità) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <style>
+        .file-upload-label {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-upload-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .result-section {
+            line-height: 1.8;
+        }
+        .result-section h1, .result-section h2, .result-section h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .result-section ul, .result-section ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        .result-section li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <div class="mb-4">
+                <h1 class="text-5xl font-bold text-indigo-900 mb-2">
+                    <i class="fas fa-map-marked-alt mr-3"></i>
+                    MAP
+                </h1>
+                <p class="text-xl text-indigo-700 font-semibold">Manual Analyses Platform</p>
+            </div>
+            <p class="text-lg text-gray-600">Piattaforma professionale per l'analisi di manuali universitari</p>
+            <div class="mt-3 flex justify-center gap-3">
+                <a href="guida-rapida.html" target="_blank" class="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition text-sm">
+                    <i class="fas fa-question-circle mr-2"></i>
+                    Apri Guida Rapida
+                </a>
+                <button id="viewHistoryBtn" class="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition text-sm">
+                    <i class="fas fa-history mr-2"></i>
+                    Storico Analisi (<span id="historyCount">0</span>)
+                </button>
+                <button id="firebaseStatusBtn" onclick="showFirebaseStatus()" class="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition text-sm" title="Clicca per verificare la connessione Firebase">
+                    <i class="fas fa-cloud mr-2"></i>
+                    <span id="firebaseStatusText">Firebase</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Card -->
+        <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+            
+            <!-- Step 1: Configurazione API -->
+            <section class="mb-8 pb-8 border-b border-gray-200">
+                <h2 class="text-2xl font-semibold text-indigo-800 mb-4 flex items-center">
+                    <span class="bg-indigo-100 text-indigo-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">1</span>
+                    Configurazione API
+                </h2>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                    <p class="text-sm text-blue-800">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        La tua chiave API viene utilizzata solo localmente nel tuo browser e non viene mai memorizzata sui nostri server.
+                    </p>
+                </div>
+                <!-- Provider e Modello -->
+                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Provider AI *
+                        </label>
+                        <select 
+                            id="aiProvider" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        >
+                            <option value="openai">OpenAI</option>
+                            <option value="claude">Anthropic Claude</option>
+                            <option value="perplexity">Perplexity AI</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Modello * <span id="modelCost" class="text-xs text-gray-500"></span>
+                        </label>
+                        <select 
+                            id="aiModel" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        >
+                            <!-- Popolato dinamicamente da JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- API Key -->
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <span id="apiKeyLabel">Chiave API OpenAI</span> *
+                        </label>
+                        <input 
+                            type="password" 
+                            id="apiKey" 
+                            placeholder="sk-..." 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">
+                            <a id="apiKeyLink" href="https://platform.openai.com/api-keys" target="_blank" class="text-indigo-600 hover:underline">
+                                Ottieni la tua chiave API
+                            </a>
+                        </p>
+                    </div>
+                    <div class="flex items-end">
+                        <button 
+                            id="testApiBtn"
+                            class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        >
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Verifica Chiave
+                        </button>
+                        <span id="apiStatus" class="ml-3 text-sm"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Caricamento File -->
+            <section class="mb-8 pb-8 border-b border-gray-200">
+                <h2 class="text-2xl font-semibold text-indigo-800 mb-4 flex items-center">
+                    <span class="bg-indigo-100 text-indigo-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">2</span>
+                    Caricamento File
+                </h2>
+                
+                <!-- Framework CSV -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Framework di Valutazione (CSV) *
+                    </label>
+                    <label for="frameworkFile" class="file-upload-label block w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 hover:bg-gray-100">
+                        <i class="fas fa-file-csv text-3xl text-indigo-500 mb-2"></i>
+                        <p class="text-sm text-gray-600">
+                            <span id="frameworkFileName" class="font-medium">Clicca per caricare il framework CSV</span>
+                        </p>
+                    </label>
+                    <input type="file" id="frameworkFile" accept=".csv" class="hidden">
+                </div>
+
+                <!-- Materia -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Materia
+                        <span class="text-xs text-gray-500 font-normal ml-2">(rilevata automaticamente dal CSV, modificabile)</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="materiaInput" 
+                        placeholder="Verrà rilevata automaticamente dal framework CSV..." 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    >
+                    <p class="text-xs text-gray-500 mt-1">
+                        💡 La materia verrà estratta dal CSV o dal nome file. Puoi modificarla manualmente se necessario.
+                    </p>
+                </div>
+
+                <!-- Metadata Estratti/Modificabili dal PDF (nascosto all'inizio) -->
+                <div id="pdfMetadataBox" class="mb-6 hidden">
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-lg">
+                        <div class="flex items-start">
+                            <i class="fas fa-edit text-blue-500 mt-1 mr-3"></i>
+                            <div class="flex-1">
+                                <h4 class="text-sm font-semibold text-blue-800 mb-3">
+                                    📄 Metadata PDF (estratti automaticamente, modificabili)
+                                </h4>
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-medium text-blue-700 mb-1">
+                                            👤 Autore
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            id="autoreInput" 
+                                            placeholder="Autore..." 
+                                            class="w-full px-3 py-2 text-sm border border-blue-200 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        >
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-blue-700 mb-1">
+                                            📚 Titolo
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            id="titoloInput" 
+                                            placeholder="Titolo..." 
+                                            class="w-full px-3 py-2 text-sm border border-blue-200 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        >
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-blue-700 mb-1">
+                                            🏢 Editore
+                                        </label>
+                                        <input 
+                                            type="text" 
+                                            id="editoreInput" 
+                                            placeholder="Editore..." 
+                                            class="w-full px-3 py-2 text-sm border border-blue-200 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        >
+                                    </div>
+                                </div>
+                                <p class="text-xs text-blue-600 mt-3">
+                                    💡 <strong>I campi sono pre-compilati</strong> con i dati estratti dal PDF. Puoi modificarli manualmente se necessario.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Volume 1 PDF -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Indice volume unico oppure volume 1 (PDF) *
+                    </label>
+                    <label for="volume1File" class="file-upload-label block w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 hover:bg-gray-100">
+                        <i class="fas fa-file-pdf text-3xl text-red-500 mb-2"></i>
+                        <p class="text-sm text-gray-600">
+                            <span id="volume1FileName" class="font-medium">Clicca per caricare l'indice del volume unico oppure volume 1</span>
+                        </p>
+                    </label>
+                    <input type="file" id="volume1File" accept=".pdf" class="hidden">
+                </div>
+
+                <!-- Volume 2 PDF (opzionale) -->
+                <div class="mb-4">
+                    <div class="flex items-center mb-3">
+                        <input type="checkbox" id="hasVolume2" class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+                        <label for="hasVolume2" class="ml-2 text-sm font-medium text-gray-700">
+                            Il manuale è diviso in 2 volumi (es: Fisica 1 e Fisica 2, Analisi 1 e Analisi 2)
+                        </label>
+                    </div>
+                    <div id="volume2Section" class="hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Indice Volume 2 (PDF)
+                        </label>
+                        <label for="volume2File" class="file-upload-label block w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 hover:bg-gray-100">
+                            <i class="fas fa-file-pdf text-3xl text-red-500 mb-2"></i>
+                            <p class="text-sm text-gray-600">
+                                <span id="volume2FileName" class="font-medium">Clicca per caricare l'indice del Volume 2</span>
+                            </p>
+                        </label>
+                        <input type="file" id="volume2File" accept=".pdf" class="hidden">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Tipo di Analisi -->
+            <section class="mb-8 pb-8 border-b border-gray-200">
+                <h2 class="text-2xl font-semibold text-indigo-800 mb-4 flex items-center">
+                    <span class="bg-indigo-100 text-indigo-800 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">3</span>
+                    Tipo di Analisi
+                </h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <label class="relative flex flex-col p-6 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-indigo-500 transition">
+                        <input type="radio" name="analysisType" value="A" checked class="absolute top-4 right-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-list-check mr-2 text-indigo-600"></i>
+                            Tipo A - Analisi Generale
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            Valutazione complessiva del volume rispetto al framework: copertura argomenti, lacune, punti di forza.
+                        </p>
+                    </label>
+                    <label class="relative flex flex-col p-6 border-2 border-gray-300 rounded-lg cursor-pointer hover:border-indigo-500 transition">
+                        <input type="radio" name="analysisType" value="B" class="absolute top-4 right-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-graduation-cap mr-2 text-indigo-600"></i>
+                            Tipo B - Analisi per Classi di Laurea
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            Valutazione specifica dell'adeguatezza del volume per ciascuna classe di laurea indicata nel framework.
+                        </p>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Step 4: Avvia Analisi -->
+            <section class="mb-8">
+                <button 
+                    id="analyzeBtn"
+                    class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-lg font-semibold rounded-lg hover:from-indigo-700 hover:to-purple-700 transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    disabled
+                >
+                    <i class="fas fa-brain mr-2"></i>
+                    Avvia Analisi
+                </button>
+            </section>
+
+            <!-- Progress Indicator -->
+            <div id="progressSection" class="hidden mb-8">
+                <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-6">
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <p id="progressText" class="text-center text-indigo-800 font-medium">
+                        Inizializzazione...
+                    </p>
+                    <div class="mt-4 bg-gray-200 rounded-full h-2">
+                        <div id="progressBar" class="bg-indigo-600 h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="hidden">
+                <h2 class="text-2xl font-semibold text-indigo-800 mb-4 flex items-center">
+                    <i class="fas fa-chart-line mr-3"></i>
+                    Risultati Analisi
+                </h2>
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 result-section" id="resultsContent">
+                    <!-- Results will be inserted here -->
+                </div>
+                <div class="mt-4 flex flex-wrap gap-3">
+                    <button id="viewPromptBtn" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fas fa-eye mr-2"></i>
+                        Visualizza Prompt
+                    </button>
+                    <button id="exportPdfBtn" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition shadow-lg">
+                        <i class="fas fa-file-pdf mr-2"></i>
+                        Esporta PDF
+                    </button>
+                    <button id="exportHtmlBtn" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-lg">
+                        <i class="fas fa-file-code mr-2"></i>
+                        Esporta HTML
+                    </button>
+                    <button id="exportMarkdownBtn" class="px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-sm">
+                        <i class="fas fa-download mr-1"></i>
+                        MD
+                    </button>
+                    <button id="newAnalysisBtn" class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition ml-auto">
+                        <i class="fas fa-redo mr-2"></i>
+                        Nuova Analisi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Prompt Modal -->
+            <div id="promptModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <div class="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
+                    <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                        <h3 class="text-2xl font-bold text-indigo-900">
+                            <i class="fas fa-code mr-2"></i>
+                            Prompt Inviato a OpenAI
+                        </h3>
+                        <button id="closePromptBtn" class="text-gray-500 hover:text-gray-700 text-2xl">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="p-6 overflow-y-auto flex-1">
+                        <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm whitespace-pre-wrap" id="promptContent">
+                            <!-- Prompt will be inserted here -->
+                        </div>
+                        <div class="mt-4 p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
+                            <p class="text-sm text-blue-900">
+                                <strong><i class="fas fa-info-circle mr-2"></i>Nota:</strong> Temperature settata a <strong>0</strong> per garantire massima consistenza nelle analisi.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-6 border-t border-gray-200 flex gap-3">
+                        <button id="copyPromptBtn" class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                            <i class="fas fa-copy mr-2"></i>
+                            Copia Prompt
+                        </button>
+                        <button id="downloadPromptBtn" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                            <i class="fas fa-download mr-2"></i>
+                            Scarica Prompt
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- History Modal -->
+        <div id="historyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-lg shadow-2xl max-w-6xl w-full max-h-[90vh] flex flex-col">
+                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-2xl font-bold text-indigo-900">
+                        <i class="fas fa-history mr-2"></i>
+                        Storico Analisi (<span id="historyModalCount">0</span>)
+                    </h3>
+                    <button id="closeHistoryBtn" class="text-gray-500 hover:text-gray-700 text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-6 overflow-y-auto flex-1">
+                    <div id="historyContent">
+                        <!-- History items will be inserted here -->
+                    </div>
+                    <div id="historyEmpty" class="hidden text-center py-12">
+                        <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                        <p class="text-gray-500 text-lg">Nessuna analisi salvata ancora</p>
+                        <p class="text-gray-400 text-sm mt-2">Le analisi verranno salvate automaticamente dopo ogni completamento</p>
+                    </div>
+                </div>
+                <div class="p-6 border-t border-gray-200 flex gap-3 justify-between flex-wrap">
+                    <div class="flex gap-3">
+                        <button id="migrateAnalysesBtn" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition" title="Aggiunge Autore/Editore alle analisi vecchie">
+                            <i class="fas fa-sync-alt mr-2"></i>
+                            Aggiorna Analisi Vecchie
+                        </button>
+                        <button id="clearHistoryBtn" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                            <i class="fas fa-trash mr-2"></i>
+                            Cancella Tutto
+                        </button>
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="compareBtn" class="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                            <i class="fas fa-columns mr-2"></i>
+                            Confronta (<span id="compareCount">0</span>)
+                        </button>
+                        <button id="exportAllBtn" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                            <i class="fas fa-download mr-2"></i>
+                            Esporta Tutte
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Confronto Side-by-Side -->
+        <div id="compareModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-lg shadow-2xl max-w-7xl w-full max-h-[90vh] flex flex-col">
+                <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-2xl font-bold text-indigo-900">
+                        <i class="fas fa-columns mr-2"></i>
+                        Confronto Analisi
+                    </h3>
+                    <button id="closeCompareBtn" class="text-gray-500 hover:text-gray-700 text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-6 overflow-y-auto flex-1" id="compareScrollContainer">
+                    <div id="compareContent" class="grid grid-cols-2 gap-6">
+                        <!-- Dynamic comparison content -->
+                    </div>
+                </div>
+                <div class="p-6 border-t border-gray-200 flex justify-center gap-3">
+                    <button id="exportCompareWordBtn" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                        <i class="fas fa-file-word mr-2"></i>
+                        📄 Esporta Word
+                    </button>
+                    <button id="resetCompareBtn" class="px-6 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition">
+                        <i class="fas fa-redo mr-2"></i>
+                        Azzera Selezione
+                    </button>
+                    <button id="closeCompareModal" class="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
+                        <i class="fas fa-times mr-2"></i>
+                        Chiudi
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-600 text-sm">
+            <p>© 2025 MAP - Manual Analyses Platform | v1.14.6</p>
+            <p class="mt-1 text-xs">Piattaforma professionale per l'analisi di manuali universitari</p>
+        </footer>
+
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

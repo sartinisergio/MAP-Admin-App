@@ -1,0 +1,141 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                                                                  ║
+║     ANALIZZATORE MANUALI UNIVERSITARI - ZANICHELLI               ║
+║                                                                  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+📦 CONTENUTO DEL PROGETTO:
+─────────────────────────────────────────────────────────────────
+
+✓ index.html              - Applicazione principale (APRI QUESTO!)
+✓ guida-rapida.html       - Guida illustrata passo-passo
+✓ README.md               - Documentazione completa tecnica
+✓ esempio-framework.csv   - Esempio di framework CSV
+✓ js/app.js               - Logica applicazione
+✓ LEGGIMI.txt             - Questo file
+
+
+🚀 INIZIO RAPIDO (5 MINUTI):
+─────────────────────────────────────────────────────────────────
+
+1. OTTIENI CHIAVE API OPENAI
+   → Vai su: https://platform.openai.com/api-keys
+   → Crea account o accedi
+   → Clicca "Create new secret key"
+   → Copia la chiave (inizia con "sk-...")
+   → IMPORTANTE: Verifica di avere credito disponibile!
+
+2. APRI L'APPLICAZIONE
+   → Doppio click su "index.html"
+   → Si aprirà nel tuo browser
+
+3. PREPARA I FILE
+   Framework:
+   → File CSV con argomenti e classi di laurea
+   → Vedi "esempio-framework.csv" per il formato
+   
+   Indici PDF:
+   → Estrai l'indice del manuale in PDF
+   → Per corsi in 2 volumi: prepara 2 PDF separati
+   → IMPORTANTE: Il PDF deve avere testo selezionabile (non immagini)
+
+4. USA L'APPLICAZIONE
+   ① Inserisci chiave API e clicca "Verifica"
+   ② Carica framework CSV
+   ③ Carica indice Volume 1 (PDF)
+   ④ Se necessario: spunta "2 volumi" e carica Volume 2
+   ⑤ Scegli tipo analisi (A=generale, B=per classe)
+   ⑥ Clicca "Avvia Analisi"
+   ⑦ Attendi 1-3 minuti
+   ⑧ Esporta risultati (Markdown o HTML)
+
+
+❓ QUALE TIPO DI ANALISI USARE:
+─────────────────────────────────────────────────────────────────
+
+TIPO A - ANALISI GENERALE
+→ Per valutazione complessiva del manuale
+→ Confronto tra diversi manuali
+→ Prima valutazione di un nuovo testo
+→ Output: copertura, lacune, punti di forza, voto 1-10
+
+TIPO B - ANALISI PER CLASSI DI LAUREA
+→ Per adozione in corsi specifici
+→ Valutazione mirata per classe di laurea
+→ Pianificazione materiale integrativo
+→ Output: adeguatezza per ogni classe, confronto, raccomandazioni
+
+
+💰 COSTI:
+─────────────────────────────────────────────────────────────────
+Analisi breve (indice 10-20 pagine):  €0.01 - €0.05
+Analisi media (indice 20-40 pagine):  €0.05 - €0.10
+Analisi lunga (indice 40+ pagine):    €0.10 - €0.20
+
+Modello usato: GPT-4o (più economico di GPT-4 standard)
+
+
+🔐 SICUREZZA:
+─────────────────────────────────────────────────────────────────
+✓ La chiave API viene usata SOLO nel tuo browser
+✓ NON viene inviata a server esterni (solo OpenAI)
+✓ I file rimangono sul tuo computer
+✓ Salvata in sessionStorage (cancellata chiudendo il browser)
+
+
+⚠️  PROBLEMI COMUNI:
+─────────────────────────────────────────────────────────────────
+
+"Chiave API non valida"
+→ Controlla di aver copiato l'intera chiave
+→ Verifica di avere credito su OpenAI
+→ La chiave deve iniziare con "sk-"
+
+"Errore estrazione PDF"
+→ Il PDF deve avere testo selezionabile (non scansioni)
+→ Prova "Salva con nome" per rigenerare il PDF
+→ Usa OCR se è una scansione
+
+"Analisi troppo lenta"
+→ Per indici molto lunghi (50+ pagine) serve più tempo
+→ Considera di estrarre solo le sezioni principali
+→ Attendi fino a 5 minuti per analisi complesse
+
+
+📚 ESEMPI DI USO:
+─────────────────────────────────────────────────────────────────
+
+CASO 1: Valutare nuovo manuale di Fisica
+→ Framework CSV con tutti gli argomenti di Fisica
+→ Indice del manuale in PDF
+→ Tipo A per valutazione generale
+→ Risultato: quanto copre il framework, cosa manca
+
+CASO 2: Scegliere manuale per L-30 (Fisica)
+→ Framework con specifiche per diverse classi
+→ Indici di 2-3 manuali candidati
+→ Tipo B per vedere quale è più adatto a L-30
+→ Confronta i risultati
+
+CASO 3: Analisi Analisi 1 + Analisi 2 (biennale)
+→ Framework completo del corso biennale
+→ Indice Volume 1 (Analisi 1) + Volume 2 (Analisi 2)
+→ Spunta "2 volumi"
+→ Tipo A per copertura complessiva
+
+
+📖 ULTERIORI RISORSE:
+─────────────────────────────────────────────────────────────────
+
+• Guida illustrata: guida-rapida.html
+• Documentazione tecnica: README.md
+• Esempio framework: esempio-framework.csv
+• Supporto: contatta il team Zanichelli
+
+
+═══════════════════════════════════════════════════════════════════
+
+             Buona analisi! 🎓
+             © 2025 Zanichelli Editore
+
+═══════════════════════════════════════════════════════════════════

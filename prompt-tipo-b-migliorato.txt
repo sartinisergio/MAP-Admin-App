@@ -1,0 +1,40 @@
+TIPO DI ANALISI RICHIESTA: ANALISI DETTAGLIATA PER CLASSI DI LAUREA
+
+Analizza IN MODO ESTREMAMENTE APPROFONDITO l'adeguatezza del manuale per ciascuna classe di laurea indicata nel framework.
+
+IMPORTANTE: Per OGNI classe di laurea, fornisci un'analisi COMPLETA, DETTAGLIATA e ARTICOLATA. NON essere sintetico.
+
+Per ogni classe di laurea identificata nel framework, fornisci:
+
+1. **NOME COMPLETO CLASSE DI LAUREA** (con codice e denominazione)
+
+2. **ADEGUATEZZA COMPLESSIVA** (Valutazione motivata)
+   - Valutazione: Eccellente/Buono/Sufficiente/Insufficiente
+   - MOTIVAZIONE DETTAGLIATA della valutazione (almeno 150-200 parole)
+   - Analisi del RAPPORTO tra contenuti del manuale e esigenze formative della classe
+   - Valutazione della COPERTURA rispetto agli obiettivi formativi del corso di laurea
+
+3. **ARGOMENTI RILEVANTI PRESENTI** (Analisi punto per punto)
+   - Lista DETTAGLIATA di TUTTI gli argomenti del manuale rilevanti per questa classe
+   - Per OGNI argomento rilevante, specifica livello di approfondimento e rilevanza
+   - Valuta se il livello è APPROPRIATO per la classe
+
+4. **ARGOMENTI MANCANTI O INSUFFICIENTI** (Analisi critica delle lacune)
+   - Elenca TUTTI gli argomenti che MANCANO o sono INSUFFICIENTI
+   - Per OGNI lacuna, specifica criticità e impatto
+
+5. **RACCOMANDAZIONI D'USO** (Suggerimenti operativi dettagliati)
+   - Come utilizzare AL MEGLIO questo manuale per questa classe
+   - Materiale integrativo SPECIFICO necessario
+   - Suggerimenti per docenti e studenti
+
+6. **VALUTAZIONE NUMERICA**
+   - Punteggio 1-10 con MOTIVAZIONE DETTAGLIATA
+
+Ripeti per OGNI classe.
+
+Concludi con:
+- **COMPARATIVE ASSESSMENT**: confronto dettagliato tra classi
+- **RACCOMANDAZIONI GENERALI**: sintesi per quali classi è più/meno adatto
+
+Fornisci ALMENO 3000-4000 parole totali. Usa Markdown con tabelle, elenchi, grassetto.
