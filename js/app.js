@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         updateFirebaseStatusUI();
         loadFrameworksFromFirebase(); // Carica framework da Firebase
+        loadManualsFromFirebase(); // Carica manuali da Firebase
     }, 1000);
 });
 
@@ -115,6 +116,16 @@ function initializeEventListeners() {
     // Framework library
     document.getElementById('frameworkSelect').addEventListener('change', handleFrameworkSelect);
     document.getElementById('refreshFrameworksBtn').addEventListener('click', loadFrameworksFromFirebase);
+    
+    // Manuals library
+    document.getElementById('manualSelect').addEventListener('change', (e) => handleManualSelect(e, 'volume1'));
+    document.getElementById('manualSelectVol2').addEventListener('change', (e) => handleManualSelect(e, 'volume2'));
+    document.getElementById('refreshManualsBtn').addEventListener('click', loadManualsFromFirebase);
+    
+    // Filtri manuali
+    document.getElementById('filterSubject').addEventListener('change', populateManualDropdowns);
+    document.getElementById('filterPublisher').addEventListener('change', populateManualDropdowns);
+    document.getElementById('filterAuthor').addEventListener('input', populateManualDropdowns);
     
     // Materia input
     document.getElementById('materiaInput').addEventListener('input', function() {
@@ -647,6 +658,288 @@ function convertFrameworkToCSV(framework) {
     });
     
     return csvData;
+}
+
+// ===================================
+// LIBRERIA MANUALI FIREBASE
+// ===================================
+
+// Store manuali globali per filtri
+let allManuals = [];
+
+// Normalizza nomi materie (rimuovi underscore, capitalizza)
+function normalizeSubject(subject) {
+    if (!subject) return 'Altro';
+    
+    // Mapping esplicito per casi comuni
+    const mapping = {
+        'chimica_generale': 'Chimica Generale',
+        'chimica generale': 'Chimica Generale',
+        'CHIMICA GENERALE': 'Chimica Generale',
+        'chimica_organica': 'Chimica Organica',
+        'chimica organica': 'Chimica Organica',
+        'CHIMICA ORGANICA': 'Chimica Organica',
+        'Chimica_Organica': 'Chimica Organica',
+        'fisica': 'Fisica Generale',
+        'Fisica': 'Fisica Generale',
+        'FISICA': 'Fisica Generale',
+        'fisica_generale': 'Fisica Generale',
+        'fisica generale': 'Fisica Generale',
+        'FISICA GENERALE': 'Fisica Generale',
+        'Fisica_Generale': 'Fisica Generale',
+        'fisica_1': 'Fisica Generale',
+        'fisica_2': 'Fisica Generale',
+        'Fisica_1': 'Fisica Generale',
+        'Fisica_2': 'Fisica Generale',
+        'analisi_1': 'Matematica',
+        'analisi_2': 'Matematica',
+        'Analisi_1': 'Matematica',
+        'Analisi_2': 'Matematica',
+        'matematica_bio': 'Matematica',
+        'Matematica_Bio': 'Matematica',
+        'economia_politica': 'Economia Politica',
+        'economia politica': 'Economia Politica',
+        'ECONOMIA POLITICA': 'Economia Politica',
+        'Economia_Politica': 'Economia Politica',
+        'macroeconomia': 'Macroeconomia',
+        'Macroeconomia': 'Macroeconomia',
+        'microeconomia': 'Microeconomia',
+        'Microeconomia': 'Microeconomia',
+        'istologia': 'Istologia ed Embriologia',
+        'Istologia': 'Istologia ed Embriologia',
+        'istologia ed embriologia': 'Istologia ed Embriologia'
+    };
+    
+    // Cerca nel mapping
+    const lower = subject.toLowerCase().trim();
+    if (mapping[lower]) {
+        return mapping[lower];
+    }
+    
+    // Se non trovato, normalizza base: rimuovi underscore e capitalizza
+    return subject
+        .replace(/_/g, ' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+}
+
+// Carica manuali da Firebase
+async function loadManualsFromFirebase() {
+    const select = document.getElementById('manualSelect');
+    const selectVol2 = document.getElementById('manualSelectVol2');
+    
+    if (!firebaseInitialized) {
+        console.warn('⚠️ Firebase non inizializzato');
+        select.innerHTML = '<option value="">❌ Firebase non disponibile - Carica PDF manuale</option>';
+        if (selectVol2) selectVol2.innerHTML = '<option value="">❌ Firebase non disponibile</option>';
+        return;
+    }
+    
+    try {
+        select.innerHTML = '<option value="">⏳ Caricamento manuali...</option>';
+        if (selectVol2) selectVol2.innerHTML = '<option value="">⏳ Caricamento...</option>';
+        
+        const snapshot = await firestoreDb.collection('manuals')
+            .where('public', '==', true)
+            .get();
+        
+        if (snapshot.empty) {
+            select.innerHTML = '<option value="">📚 Nessun manuale disponibile - Carica PDF</option>';
+            if (selectVol2) selectVol2.innerHTML = '<option value="">📚 Nessun manuale disponibile</option>';
+            console.log('⚠️ Nessun manuale trovato su Firebase');
+            return;
+        }
+        
+        // Raccogli tutti i manuali
+        allManuals = [];
+        snapshot.forEach(doc => {
+            const manual = doc.data();
+            manual.id = doc.id;
+            
+            // Normalizza materia (anche se già su Firebase, per sicurezza)
+            if (manual.subject) {
+                manual.subject = normalizeSubject(manual.subject);
+            } else {
+                manual.subject = 'Altro';
+            }
+            
+            // Fix autore mancante
+            if (!manual.author || manual.author === 'Autore sconosciuto') {
+                if (manual.authors && manual.authors.length > 0) {
+                    manual.author = manual.authors.join(', ');
+                } else {
+                    manual.author = 'Autore sconosciuto';
+                }
+            }
+            
+            // Fix titolo mancante (estrai dal source_file se disponibile)
+            if (!manual.title || manual.title === 'Senza titolo') {
+                if (manual.source_file) {
+                    // Estrai titolo dal nome file
+                    const parts = manual.source_file.replace('.json', '').replace('.txt', '').split('_');
+                    if (parts.length > 1) {
+                        manual.title = parts.slice(1).join(' ');
+                    }
+                }
+            }
+            
+            allManuals.push(manual);
+        });
+        
+        // Ordina alfabeticamente per AUTORE
+        allManuals.sort((a, b) => a.author.localeCompare(b.author));
+        
+        // Popola filtri
+        populateFilters();
+        
+        // Popola dropdown
+        populateManualDropdowns();
+        
+        console.log(`✅ Caricati ${snapshot.size} manuali da Firebase`);
+        showNotification('success', `✅ ${snapshot.size} manuali disponibili`);
+        
+    } catch (error) {
+        console.error('❌ Errore caricamento manuali:', error);
+        select.innerHTML = '<option value="">❌ Errore caricamento - Carica PDF manuale</option>';
+        if (selectVol2) selectVol2.innerHTML = '<option value="">❌ Errore caricamento</option>';
+        showNotification('error', 'Errore caricamento manuali da Firebase');
+    }
+}
+
+// Popola i filtri dinamicamente
+function populateFilters() {
+    const subjectFilter = document.getElementById('filterSubject');
+    
+    // Estrai materie uniche
+    const subjects = [...new Set(allManuals.map(m => m.subject).filter(Boolean))].sort();
+    
+    // Popola filtro materia
+    let html = '<option value="">Tutte le materie</option>';
+    subjects.forEach(subject => {
+        html += `<option value="${subject}">${subject}</option>`;
+    });
+    subjectFilter.innerHTML = html;
+}
+
+// Popola dropdown manuali con filtri applicati
+function populateManualDropdowns() {
+    const select = document.getElementById('manualSelect');
+    const selectVol2 = document.getElementById('manualSelectVol2');
+    
+    // Leggi filtri
+    const filterSubject = document.getElementById('filterSubject').value;
+    const filterPublisher = document.getElementById('filterPublisher').value;
+    const filterAuthor = document.getElementById('filterAuthor').value.toLowerCase();
+    
+    // Filtra manuali
+    let filtered = allManuals;
+    
+    if (filterSubject) {
+        filtered = filtered.filter(m => m.subject === filterSubject);
+    }
+    
+    if (filterPublisher) {
+        filtered = filtered.filter(m => m.publisher === filterPublisher);
+    }
+    
+    if (filterAuthor) {
+        filtered = filtered.filter(m => 
+            m.author.toLowerCase().includes(filterAuthor) || 
+            (m.authors && m.authors.some(a => a.toLowerCase().includes(filterAuthor)))
+        );
+    }
+    
+    // Popola dropdown Volume 1
+    let html = '<option value="">📚 Seleziona manuale dalla libreria...</option>';
+    filtered.forEach(manual => {
+        const label = `${manual.author} - ${manual.title} (${manual.publisher})`;
+        html += `<option value="${manual.id}">${label}</option>`;
+    });
+    select.innerHTML = html;
+    
+    // Popola dropdown Volume 2
+    if (selectVol2) {
+        let html2 = '<option value="">📚 Seleziona Volume 2 dalla libreria...</option>';
+        filtered.forEach(manual => {
+            const label = `${manual.author} - ${manual.title} (${manual.publisher})`;
+            html2 += `<option value="${manual.id}">${label}</option>`;
+        });
+        selectVol2.innerHTML = html2;
+    }
+    
+    console.log(`🔍 ${filtered.length} manuali dopo filtri`);
+}
+
+// Gestisce selezione manuale da dropdown
+async function handleManualSelect(e, volumeNumber = 'volume1') {
+    const manualId = e.target.value;
+    
+    if (!manualId) {
+        // Deselezionato
+        document.getElementById('manualPreview').classList.add('hidden');
+        return;
+    }
+    
+    try {
+        // Trova il manuale
+        const manual = allManuals.find(m => m.id === manualId);
+        
+        if (!manual) {
+            showNotification('error', 'Manuale non trovato');
+            return;
+        }
+        
+        // Mostra anteprima
+        const preview = document.getElementById('manualPreview');
+        const previewContent = document.getElementById('manualPreviewContent');
+        
+        let previewText = `<strong>${manual.title}</strong><br>`;
+        previewText += `<em>${manual.author}</em> - ${manual.publisher}<br><br>`;
+        
+        if (manual.index_text) {
+            previewText += manual.index_text.substring(0, 500) + '...';
+        } else if (manual.index_chapters && manual.index_chapters.length > 0) {
+            manual.index_chapters.slice(0, 5).forEach(ch => {
+                previewText += `<strong>CAPITOLO ${ch.number}:</strong> ${ch.title}<br>`;
+            });
+            if (manual.index_chapters.length > 5) {
+                previewText += `<em>...e altri ${manual.index_chapters.length - 5} capitoli</em>`;
+            }
+        }
+        
+        previewContent.innerHTML = previewText;
+        preview.classList.remove('hidden');
+        
+        // Popola metadata
+        document.getElementById('autoreInput').value = manual.author;
+        document.getElementById('titoloInput').value = manual.title;
+        document.getElementById('editoreInput').value = manual.publisher;
+        document.getElementById('materiaInput').value = manual.subject;
+        
+        // Mostra metadata box
+        document.getElementById('pdfMetadataBox').classList.remove('hidden');
+        
+        // Salva indice in appState
+        if (volumeNumber === 'volume1') {
+            appState.volume1Text = manual.index_text || '';
+        } else {
+            appState.volume2Text = manual.index_text || '';
+        }
+        
+        // Aggiorna UI
+        const fileNameId = volumeNumber === 'volume1' ? 'volume1FileName' : 'volume2FileName';
+        document.getElementById(fileNameId).textContent = `✅ ${manual.title} (dalla libreria)`;
+        
+        validateForm();
+        
+        showNotification('success', `✅ Manuale "${manual.title}" caricato`);
+        console.log('✅ Manuale caricato:', manual);
+        
+    } catch (error) {
+        console.error('❌ Errore caricamento manuale:', error);
+        showNotification('error', 'Errore caricamento manuale');
+    }
 }
 
 // PDF Upload and Parsing
