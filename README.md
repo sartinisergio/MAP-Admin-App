@@ -400,3 +400,5 @@ Data test: 06/01/2026 11:20:06,32
 ## Test Deploy Automatico 
 Questo e' un test del workflow completo: PC -> GitHub -> Netlify 
 Data test: 06/01/2026 11:22:25,16 
+ 
+## Test Deploy Develop Branch 
