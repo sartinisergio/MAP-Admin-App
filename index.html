@@ -285,21 +285,71 @@
                     </div>
                 </div>
 
-                <!-- Volume 1 PDF -->
+                <!-- Libreria Manuali Firebase -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Indice volume unico oppure volume 1 (PDF) *
+                        📚 Seleziona Manuale dalla Libreria
                     </label>
-                    <label for="volume1File" class="file-upload-label block w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 hover:bg-gray-100">
-                        <i class="fas fa-file-pdf text-3xl text-red-500 mb-2"></i>
-                        <p class="text-sm text-gray-600">
-                            <span id="volume1FileName" class="font-medium">Clicca per caricare l'indice del volume unico oppure volume 1</span>
-                        </p>
-                    </label>
-                    <input type="file" id="volume1File" accept=".pdf" class="hidden">
+                    
+                    <!-- Filtri -->
+                    <div class="grid md:grid-cols-3 gap-3 mb-3">
+                        <div>
+                            <label class="text-xs text-gray-600 block mb-1">📂 Materia</label>
+                            <select id="filterSubject" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                <option value="">Tutte le materie</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-600 block mb-1">🏢 Editore</label>
+                            <select id="filterPublisher" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                <option value="">Tutti gli editori</option>
+                                <option value="Zanichelli">Zanichelli</option>
+                                <option value="Competitor">Competitor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-600 block mb-1">👤 Autore</label>
+                            <input type="text" id="filterAuthor" placeholder="Cerca per autore..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown Manuali -->
+                    <div class="flex items-center gap-2">
+                        <select id="manualSelect" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                            <option value="">📚 Caricamento manuali...</option>
+                        </select>
+                        <button id="refreshManualsBtn" class="px-4 py-3 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg transition" title="Ricarica manuali">
+                            🔄
+                        </button>
+                    </div>
+                    
+                    <!-- Anteprima indice -->
+                    <div id="manualPreview" class="hidden mt-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <h4 class="text-sm font-semibold text-blue-800 mb-2">📖 Anteprima Indice</h4>
+                        <div id="manualPreviewContent" class="text-xs text-gray-700 max-h-40 overflow-y-auto"></div>
+                    </div>
+                    
+                    <!-- Fallback PDF Custom -->
+                    <div class="mt-4">
+                        <details class="group">
+                            <summary class="cursor-pointer text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                                <i class="fas fa-chevron-right group-open:rotate-90 transition-transform mr-2"></i>
+                                Oppure carica un indice PDF personalizzato
+                            </summary>
+                            <div class="mt-3">
+                                <label for="volume1File" class="file-upload-label block w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 hover:bg-gray-100">
+                                    <i class="fas fa-file-pdf text-3xl text-red-500 mb-2"></i>
+                                    <p class="text-sm text-gray-600">
+                                        <span id="volume1FileName" class="font-medium">Clicca per caricare l'indice del volume unico oppure volume 1</span>
+                                    </p>
+                                </label>
+                                <input type="file" id="volume1File" accept=".pdf" class="hidden">
+                            </div>
+                        </details>
+                    </div>
                 </div>
 
-                <!-- Volume 2 PDF (opzionale) -->
+                <!-- Volume 2 (opzionale) -->
                 <div class="mb-4">
                     <div class="flex items-center mb-3">
                         <input type="checkbox" id="hasVolume2" class="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
@@ -309,15 +359,30 @@
                     </div>
                     <div id="volume2Section" class="hidden">
                         <label class="block text-sm font-medium text-gray-700 mb-2">
-                            Indice Volume 2 (PDF)
+                            📚 Volume 2
                         </label>
-                        <label for="volume2File" class="file-upload-label block w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 hover:bg-gray-100">
-                            <i class="fas fa-file-pdf text-3xl text-red-500 mb-2"></i>
-                            <p class="text-sm text-gray-600">
-                                <span id="volume2FileName" class="font-medium">Clicca per caricare l'indice del Volume 2</span>
-                            </p>
-                        </label>
-                        <input type="file" id="volume2File" accept=".pdf" class="hidden">
+                        
+                        <!-- Dropdown Volume 2 -->
+                        <select id="manualSelectVol2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent mb-3">
+                            <option value="">📚 Seleziona Volume 2 dalla libreria...</option>
+                        </select>
+                        
+                        <!-- Fallback PDF Volume 2 -->
+                        <details class="group">
+                            <summary class="cursor-pointer text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                                <i class="fas fa-chevron-right group-open:rotate-90 transition-transform mr-2"></i>
+                                Oppure carica PDF Volume 2 personalizzato
+                            </summary>
+                            <div class="mt-3">
+                                <label for="volume2File" class="file-upload-label block w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 hover:bg-gray-100">
+                                    <i class="fas fa-file-pdf text-3xl text-red-500 mb-2"></i>
+                                    <p class="text-sm text-gray-600">
+                                        <span id="volume2FileName" class="font-medium">Clicca per caricare l'indice del Volume 2</span>
+                                    </p>
+                                </label>
+                                <input type="file" id="volume2File" accept=".pdf" class="hidden">
+                            </div>
+                        </details>
                     </div>
                 </div>
             </section>
