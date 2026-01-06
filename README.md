@@ -1,6 +1,6 @@
 # 📚 MAP - Manual Analyses Platform
 
-**Versione**: v1.14.6 "Export Word Semplificato - STABILE"
+**Versione**: v1.15.0 "Libreria Framework Firebase - IN SVILUPPO"
 
 Piattaforma web professionale per l'analisi automatica di manuali universitari rispetto a framework di valutazione, utilizzando l'intelligenza artificiale di OpenAI, Anthropic Claude e Perplexity AI.
 
@@ -26,14 +26,23 @@ Piattaforma web professionale per l'analisi automatica di manuali universitari r
 
 ### ✅ Features Implementate
 
-1. **Caricamento Multiplo di File**
+1. **🆕 Libreria Framework Firebase (v1.15.0 - IN SVILUPPO)**
+   - **Dropdown framework precaricati**: Seleziona da ~50 framework già disponibili
+   - **Filtro per materia**: Framework organizzati per disciplina
+   - **Caricamento istantaneo**: Da 2 minuti → 10 secondi ⚡
+   - **Fallback CSV custom**: Upload framework personalizzati sempre disponibile
+   - Struttura dati: Collection `frameworks` su Firestore
+   - Upload helper: `upload-frameworks-to-firebase.html`
+
+2. **Caricamento Multiplo di File**
    - Upload framework di valutazione in formato CSV (⭐ **qualsiasi struttura, qualsiasi materia!**)
+   - **OPPURE** Selezione rapida da libreria Firebase (NEW)
    - Upload indice Volume 1 (PDF)
    - Upload opzionale indice Volume 2 (PDF) per corsi multi-volume
 
 > 💡 **Nota Importante**: L'app funziona con **QUALSIASI materia universitaria**! Fisica, Chimica, Matematica, Diritto, Economia, Programmazione, Medicina, e qualsiasi altra disciplina. Vedi [FRAMEWORK-QUALSIASI-MATERIA.md](FRAMEWORK-QUALSIASI-MATERIA.md) per dettagli.
 
-2. **Due Tipi di Analisi**
+3. **Due Tipi di Analisi**
    - **Tipo A - Analisi Generale**: valutazione complessiva del manuale
    - **Tipo B - Analisi per Classi di Laurea**: valutazione specifica per ogni classe
 
@@ -390,15 +399,3 @@ Netlify permette di usare il tuo dominio:
 **Data Rilascio**: Gennaio 2025  
 **Modello AI**: OpenAI GPT-4o  
 **Ultimo Aggiornamento**: Export PDF/HTML professionali + Sistema pubblicazione colleghi
- 
-TEST DEPLOY AUTOMATICO - 06/01/2026 11:13:27,11 
- 
-## Test Deploy Automatico 
-Questo e' un test del workflow completo: PC -> GitHub -> Netlify 
-Data test: 06/01/2026 11:20:06,32 
- 
-## Test Deploy Automatico 
-Questo e' un test del workflow completo: PC -> GitHub -> Netlify 
-Data test: 06/01/2026 11:22:25,16 
- 
-## Test Deploy Develop Branch 

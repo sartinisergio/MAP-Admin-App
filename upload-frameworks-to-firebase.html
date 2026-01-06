@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Framework su Firebase - MAP Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-bold text-indigo-800 mb-6">
+                🚀 Upload Framework su Firebase
+            </h1>
+            
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+                <p class="text-sm text-blue-800">
+                    <strong>📝 Istruzioni:</strong><br>
+                    1. Seleziona i file JSON dei framework (multipli consentiti)<br>
+                    2. Clicca "Upload su Firebase"<br>
+                    3. Attendi completamento<br>
+                    4. I framework saranno disponibili nell'app principale
+                </p>
+            </div>
+
+            <!-- File Input -->
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Seleziona Framework JSON
+                </label>
+                <input 
+                    type="file" 
+                    id="frameworkFiles" 
+                    accept=".json,.txt" 
+                    multiple
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                >
+                <p class="text-xs text-gray-500 mt-1">
+                    💡 Puoi selezionare più file contemporaneamente (Ctrl+Click o Shift+Click)
+                </p>
+            </div>
+
+            <!-- Upload Button -->
+            <button 
+                id="uploadBtn"
+                class="w-full px-6 py-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+                🚀 Upload su Firebase
+            </button>
+
+            <!-- Progress -->
+            <div id="progress" class="mt-6 hidden">
+                <div class="mb-2">
+                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                        <span id="progressText">Upload in corso...</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3">
+                        <div id="progressBar" class="bg-indigo-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="results" class="mt-6 hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">📊 Risultati Upload:</h3>
+                <div id="resultsList" class="space-y-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB4dkch9sbJ7-nggyie64_ztv8RBduqazE",
+            authDomain: "analisi-manuali-zanichelli.firebaseapp.com",
+            databaseURL: "https://analisi-manuali-zanichelli-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "analisi-manuali-zanichelli",
+            storageBucket: "analisi-manuali-zanichelli.firebasestorage.app",
+            messagingSenderId: "444991481658",
+            appId: "1:444991481658:web:8ca983f79532b8b3ab5203",
+            measurementId: "G-0WY4VC8FSQ"
+        };
+
+        // Inizializza Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Event Listeners
+        document.getElementById('uploadBtn').addEventListener('click', uploadFrameworks);
+
+        // Upload Frameworks
+        async function uploadFrameworks() {
+            const files = document.getElementById('frameworkFiles').files;
+            
+            if (files.length === 0) {
+                alert('⚠️ Seleziona almeno un file JSON');
+                return;
+            }
+
+            const uploadBtn = document.getElementById('uploadBtn');
+            const progress = document.getElementById('progress');
+            const results = document.getElementById('results');
+            const resultsList = document.getElementById('resultsList');
+
+            uploadBtn.disabled = true;
+            progress.classList.remove('hidden');
+            results.classList.add('hidden');
+            resultsList.innerHTML = '';
+
+            const totalFiles = files.length;
+            let completed = 0;
+            const uploadResults = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                try {
+                    updateProgress((i / totalFiles) * 100, `Upload ${file.name}...`);
+                    
+                    const content = await readFileAsText(file);
+                    const framework = JSON.parse(content);
+                    
+                    // Genera ID unico
+                    const frameworkId = generateFrameworkId(framework.framework.name);
+                    
+                    // Prepara documento per Firestore
+                    const docData = {
+                        name: framework.framework.name,
+                        subject: extractSubject(framework.framework.name, framework.framework.description),
+                        version: framework.framework.version || '1.0',
+                        description: framework.framework.description || '',
+                        date: framework.framework.date || new Date().toISOString().split('T')[0],
+                        scale: framework.scale || {},
+                        syllabus_modules: framework.syllabus_modules || [],
+                        created_at: firebase.firestore.FieldValue.serverTimestamp(),
+                        created_by: 'sergio@zanichelli.it',
+                        public: true
+                    };
+                    
+                    // Upload a Firestore
+                    await db.collection('frameworks').doc(frameworkId).set(docData);
+                    
+                    uploadResults.push({
+                        file: file.name,
+                        status: 'success',
+                        id: frameworkId,
+                        name: framework.framework.name
+                    });
+                    
+                    completed++;
+                    
+                } catch (error) {
+                    console.error(`Errore upload ${file.name}:`, error);
+                    uploadResults.push({
+                        file: file.name,
+                        status: 'error',
+                        error: error.message
+                    });
+                }
+            }
+
+            updateProgress(100, 'Completato!');
+            
+            // Mostra risultati
+            results.classList.remove('hidden');
+            uploadResults.forEach(result => {
+                const div = document.createElement('div');
+                div.className = result.status === 'success' 
+                    ? 'p-3 bg-green-50 border border-green-200 rounded text-sm'
+                    : 'p-3 bg-red-50 border border-red-200 rounded text-sm';
+                
+                if (result.status === 'success') {
+                    div.innerHTML = `
+                        <p class="font-medium text-green-800">✅ ${result.file}</p>
+                        <p class="text-green-600 text-xs">ID: ${result.id} | Nome: ${result.name}</p>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <p class="font-medium text-red-800">❌ ${result.file}</p>
+                        <p class="text-red-600 text-xs">Errore: ${result.error}</p>
+                    `;
+                }
+                
+                resultsList.appendChild(div);
+            });
+
+            uploadBtn.disabled = false;
+            
+            alert(`✅ Upload completato!\n\n${completed}/${totalFiles} framework caricati con successo`);
+        }
+
+        // Helper: Read file as text
+        function readFileAsText(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(e);
+                reader.readAsText(file);
+            });
+        }
+
+        // Helper: Generate framework ID
+        function generateFrameworkId(name) {
+            return name
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .substring(0, 50) + '-' + Date.now().toString(36);
+        }
+
+        // Helper: Extract subject from name/description
+        function extractSubject(name, description) {
+            const text = (name + ' ' + description).toLowerCase();
+            
+            // Regole prioritarie (controlla dall'alto verso il basso)
+            // Usa regex per match più precisi
+            
+            // Istologia/Embriologia
+            if (/istologia|embriologia/i.test(text)) {
+                return 'Istologia ed Embriologia';
+            }
+            
+            // Matematica (varie forme)
+            if (/analisi matematica|matematica per|matematica \d|calcolo/i.test(text)) {
+                return 'Matematica';
+            }
+            
+            // Chimica (specifica prima, generica dopo)
+            if (/chimica generale/i.test(text)) {
+                return 'Chimica Generale';
+            }
+            if (/chimica organica/i.test(text)) {
+                return 'Chimica Organica';
+            }
+            if (/chimica/i.test(text)) {
+                return 'Chimica';
+            }
+            
+            // Fisica
+            if (/fisica generale|fisica \d|elettromagnetismo/i.test(text)) {
+                return 'Fisica';
+            }
+            
+            // Economia
+            if (/macroeconomia/i.test(text)) {
+                return 'Economia Politica';
+            }
+            if (/microeconomia/i.test(text)) {
+                return 'Economia Politica';
+            }
+            if (/economia politica|economia/i.test(text)) {
+                return 'Economia Politica';
+            }
+            
+            // Biologia
+            if (/biologia|bioscienze/i.test(text)) {
+                return 'Biologia';
+            }
+            
+            // Altri
+            if (/diritto/i.test(text)) {
+                return 'Diritto';
+            }
+            if (/farmacia/i.test(text)) {
+                return 'Farmacia';
+            }
+            if (/ingegneria/i.test(text)) {
+                return 'Ingegneria';
+            }
+            
+            return 'Altro';
+        }
+
+        // Helper: Update progress
+        function updateProgress(percent, text) {
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = Math.round(percent) + '%';
+            document.getElementById('progressText').textContent = text;
+        }
+    </script>
+</body>
+</html>

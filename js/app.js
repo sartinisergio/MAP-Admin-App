@@ -87,7 +87,10 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     loadSavedApiKey();
     // Aggiorna UI Firebase all'avvio con un piccolo ritardo per dare tempo a Firestore
-    setTimeout(() => updateFirebaseStatusUI(), 1000);
+    setTimeout(() => {
+        updateFirebaseStatusUI();
+        loadFrameworksFromFirebase(); // Carica framework da Firebase
+    }, 1000);
 });
 
 // Event Listeners
@@ -108,6 +111,10 @@ function initializeEventListeners() {
     document.getElementById('frameworkFile').addEventListener('change', handleFrameworkUpload);
     document.getElementById('volume1File').addEventListener('change', (e) => handlePdfUpload(e, 'volume1'));
     document.getElementById('volume2File').addEventListener('change', (e) => handlePdfUpload(e, 'volume2'));
+    
+    // Framework library
+    document.getElementById('frameworkSelect').addEventListener('change', handleFrameworkSelect);
+    document.getElementById('refreshFrameworksBtn').addEventListener('click', loadFrameworksFromFirebase);
     
     // Materia input
     document.getElementById('materiaInput').addEventListener('input', function() {
@@ -505,6 +512,141 @@ function extractMateriaFromFramework(data, fileName) {
     // METODO 3: Nessuna materia trovata
     console.log('⚠️ Materia non rilevata, richiesta input utente');
     return null;
+}
+
+// ========================================
+// FRAMEWORK LIBRARY (Firebase)
+// ========================================
+
+// Carica framework da Firebase
+async function loadFrameworksFromFirebase() {
+    const select = document.getElementById('frameworkSelect');
+    
+    if (!firebaseInitialized) {
+        console.warn('⚠️ Firebase non inizializzato');
+        select.innerHTML = '<option value="">❌ Firebase non disponibile - Carica CSV manuale</option>';
+        return;
+    }
+    
+    try {
+        select.innerHTML = '<option value="">⏳ Caricamento framework...</option>';
+        
+        const snapshot = await firestoreDb.collection('frameworks')
+            .where('public', '==', true)
+            .get();
+        
+        if (snapshot.empty) {
+            select.innerHTML = '<option value="">📚 Nessun framework disponibile - Carica CSV</option>';
+            console.log('⚠️ Nessun framework trovato su Firebase');
+            return;
+        }
+        
+        // Raccogli tutti i framework in un array
+        const frameworks = [];
+        snapshot.forEach(doc => {
+            const fw = doc.data();
+            fw.id = doc.id;
+            frameworks.push(fw);
+        });
+        
+        // Ordina alfabeticamente per nome
+        frameworks.sort((a, b) => a.name.localeCompare(b.name));
+        
+        // Popola select con lista semplice
+        let html = '<option value="">📚 Seleziona framework dalla libreria...</option>';
+        
+        frameworks.forEach(fw => {
+            html += `<option value="${fw.id}">${fw.name}</option>`;
+        });
+        
+        select.innerHTML = html;
+        
+        console.log(`✅ Caricati ${snapshot.size} framework da Firebase`);
+        showNotification('success', `✅ ${snapshot.size} framework disponibili`);
+        
+    } catch (error) {
+        console.error('❌ Errore caricamento framework:', error);
+        select.innerHTML = '<option value="">❌ Errore caricamento - Carica CSV manuale</option>';
+        showNotification('error', 'Errore caricamento framework da Firebase');
+    }
+}
+
+// Gestisce selezione framework da dropdown
+async function handleFrameworkSelect(e) {
+    const frameworkId = e.target.value;
+    
+    if (!frameworkId) {
+        // Deselezionato
+        appState.frameworkData = null;
+        document.getElementById('materiaInput').value = '';
+        appState.materia = '';
+        validateForm();
+        return;
+    }
+    
+    if (!firebaseInitialized) {
+        showNotification('error', 'Firebase non disponibile');
+        return;
+    }
+    
+    try {
+        updateProgress(10, 'Caricamento framework...');
+        
+        const doc = await firestoreDb.collection('frameworks').doc(frameworkId).get();
+        
+        if (!doc.exists) {
+            showNotification('error', 'Framework non trovato');
+            updateProgress(0, '');
+            return;
+        }
+        
+        const framework = doc.data();
+        
+        // Converti da formato JSON a formato CSV (array di oggetti)
+        const csvData = convertFrameworkToCSV(framework);
+        appState.frameworkData = csvData;
+        
+        // Imposta materia
+        if (framework.subject) {
+            appState.materia = framework.subject;
+            document.getElementById('materiaInput').value = framework.subject;
+        }
+        
+        // Aggiorna UI
+        document.getElementById('frameworkFileName').textContent = `✅ ${framework.name} (dalla libreria)`;
+        
+        updateProgress(0, '');
+        validateForm();
+        
+        showNotification('success', `✅ Framework "${framework.name}" caricato`);
+        console.log('✅ Framework caricato:', framework);
+        
+    } catch (error) {
+        console.error('❌ Errore caricamento framework:', error);
+        showNotification('error', 'Errore caricamento framework');
+        updateProgress(0, '');
+    }
+}
+
+// Converte framework JSON (da Firebase) in formato CSV (array di oggetti)
+function convertFrameworkToCSV(framework) {
+    const csvData = [];
+    
+    // Estrai moduli dal framework
+    const modules = framework.syllabus_modules || [];
+    
+    modules.forEach((module, index) => {
+        const row = {
+            'Modulo': module.name || `Modulo ${index + 1}`,
+            'ID': module.id || index + 1,
+            'Contenuti': Array.isArray(module.core_contents) ? module.core_contents.join('; ') : '',
+            'Obiettivi': Array.isArray(module.learning_outcomes) ? module.learning_outcomes.join('; ') : '',
+            'Materia': framework.subject || ''
+        };
+        csvData.push(row);
+    });
+    
+    return csvData;
 }
 
 // PDF Upload and Parsing

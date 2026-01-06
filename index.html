@@ -167,18 +167,53 @@
                     Caricamento File
                 </h2>
                 
-                <!-- Framework CSV -->
+                <!-- Framework Selection -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Framework di Valutazione (CSV) *
+                        Framework di Valutazione *
                     </label>
-                    <label for="frameworkFile" class="file-upload-label block w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 hover:bg-gray-100">
-                        <i class="fas fa-file-csv text-3xl text-indigo-500 mb-2"></i>
-                        <p class="text-sm text-gray-600">
-                            <span id="frameworkFileName" class="font-medium">Clicca per caricare il framework CSV</span>
+                    
+                    <!-- Dropdown Framework da Libreria -->
+                    <div class="mb-4">
+                        <div class="flex gap-2">
+                            <select 
+                                id="frameworkSelect" 
+                                class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            >
+                                <option value="">📚 Seleziona framework dalla libreria...</option>
+                                <option value="loading" disabled>⏳ Caricamento framework...</option>
+                            </select>
+                            <button 
+                                id="refreshFrameworksBtn"
+                                class="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+                                title="Ricarica framework"
+                            >
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">
+                            💡 Seleziona un framework precaricato oppure carica il tuo CSV personalizzato qui sotto
                         </p>
-                    </label>
-                    <input type="file" id="frameworkFile" accept=".csv" class="hidden">
+                    </div>
+
+                    <!-- Oppure Upload CSV Custom -->
+                    <div class="mb-4">
+                        <details class="group">
+                            <summary class="cursor-pointer text-sm text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                                <i class="fas fa-chevron-right group-open:rotate-90 transition-transform mr-2"></i>
+                                Oppure carica un framework CSV personalizzato
+                            </summary>
+                            <div class="mt-3">
+                                <label for="frameworkFile" class="file-upload-label block w-full px-6 py-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 hover:bg-gray-100">
+                                    <i class="fas fa-file-csv text-3xl text-indigo-500 mb-2"></i>
+                                    <p class="text-sm text-gray-600">
+                                        <span id="frameworkFileName" class="font-medium">Clicca per caricare il framework CSV</span>
+                                    </p>
+                                </label>
+                                <input type="file" id="frameworkFile" accept=".csv" class="hidden">
+                            </div>
+                        </details>
+                    </div>
                 </div>
 
                 <!-- Materia -->
@@ -497,7 +532,7 @@
 
         <!-- Footer -->
         <footer class="text-center text-gray-600 text-sm">
-            <p>© 2025 MAP - Manual Analyses Platform | v1.14.6</p>
+            <p>© 2025 MAP - Manual Analyses Platform | v1.15.0 [DEVELOP]</p>
             <p class="mt-1 text-xs">Piattaforma professionale per l'analisi di manuali universitari</p>
         </footer>
 
