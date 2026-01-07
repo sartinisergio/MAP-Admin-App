@@ -1246,8 +1246,27 @@ function formatFrameworkForPrompt(frameworkData) {
         return /^\d+\.\d+(\..+)?/.test(moduloValue.trim());
     });
     
+    // ESTRAI I MODULI (righe che iniziano con numero seguito da spazio, es: "1 Fondamenti")
+    const moduloRows = frameworkData.filter(row => {
+        const moduloValue = row[firstHeader] || '';
+        return /^\d+\s+/.test(moduloValue.trim());
+    });
+    
     // Crea elenco numerato degli argomenti
     let formatted = 'FRAMEWORK DI VALUTAZIONE\n\n';
+    
+    // 🔧 NUOVA SEZIONE: ELENCO MODULI
+    if (moduloRows.length > 0) {
+        formatted += '📚 STRUTTURA DEL FRAMEWORK - MODULI PRINCIPALI:\n\n';
+        moduloRows.forEach((row, index) => {
+            const nomeModulo = row[firstHeader] || '';
+            formatted += `MODULO ${index + 1}: ${nomeModulo}\n`;
+        });
+        formatted += `\n⚠️ TOTALE MODULI: ${moduloRows.length}\n`;
+        formatted += `⚠️ DEVI ANALIZZARE **TUTTI I ${moduloRows.length} MODULI** NEL TUO REPORT!\n\n`;
+        formatted += '---\n\n';
+    }
+    
     formatted += 'ELENCO COMPLETO DEGLI ARGOMENTI DA ANALIZZARE:\n\n';
     
     topicRows.forEach((row, index) => {
@@ -1303,7 +1322,11 @@ Descrivi in 2-3 paragrafi:
 
 ## 2. COPERTURA DEGLI ARGOMENTI RISPETTO AL FRAMEWORK
 
-**PRIMA DI INIZIARE L'ANALISI**: Estrai dal framework CSV TUTTI gli argomenti didattici (righe con codici tipo "1.1", "1.2", "2.1", "3.4", etc.). IGNORA:
+**PRIMA DI INIZIARE L'ANALISI**: Estrai dal framework CSV:
+1. **TUTTI I MODULI PRINCIPALI** (es: "Modulo 1 - Fondamenti", "Modulo 2 - Meccanismi", etc.)
+2. **TUTTI GLI ARGOMENTI DIDATTICI** (righe con codici tipo "1.1", "1.2", "2.1", "3.4", etc.)
+
+IGNORA:
 - Intestazioni ("Modulo/Sotto-modulo", "L-13 Biologia", etc.)
 - Righe di punteggio totale
 - Legenda ("Punteggio", "Significato didattico", "1-2 Presenza marginale")
@@ -1312,38 +1335,51 @@ Descrivi in 2-3 paragrafi:
 
 **REGOLA FONDAMENTALE ASSOLUTA:**
 
-All'inizio del prompt ti e' stato fornito un ELENCO NUMERATO COMPLETO degli argomenti da analizzare.
-
-DEVI MENZIONARE **TUTTI** QUEGLI ARGOMENTI nella tua analisi discorsiva.
-Se un argomento NON e' presente nel manuale, devi comunque CITARLO e dire "Il [Nome argomento] (X.X) NON e' trattato nel manuale".
+All'inizio del prompt ti ho fornito:
+1. Un elenco di **TUTTI I MODULI** da analizzare (es: Modulo 1, Modulo 2, ..., Modulo N)
+2. Un elenco di **TUTTI GLI ARGOMENTI** da menzionare (es: 1.1, 1.2, 2.1, etc.)
 
 **PRIMA DI INIZIARE L'ANALISI NARRATIVA:**
 
 Conferma di aver letto l'elenco completo scrivendo:
 
-"HO IDENTIFICATO [N] ARGOMENTI NEL FRAMEWORK. Mi assicurero' di menzionare OGNUNO di essi nel mio report."
+"HO IDENTIFICATO [N] MODULI E [M] ARGOMENTI NEL FRAMEWORK. Mi assicurerò di analizzare TUTTI I MODULI e menzionare TUTTI GLI ARGOMENTI nel mio report."
 
-**STEP 2 - ANALISI NARRATIVA PER MACRO-AREA:**
+**STEP 2 - ANALISI NARRATIVA PER MODULO:**
 
-Ora scrivi paragrafi discorsivi organizzati per macro-area. All'interno di ogni paragrafo, CITA ESPLICITAMENTE ogni argomento della lista sopra:
+⚠️ **IMPORTANTE**: Devi creare una sezione **### Modulo X - [Nome]** per **OGNI MODULO** del framework, anche se il manuale non lo copre!
 
-### [Nome Macro-Area] (es: "Modulo 1 - Fondamenti")
+Se un modulo è **assente nel manuale**, scrivi:
 
-Per ogni argomento specifico del framework in questa area (es: 1.1, 1.2, 1.3, 1.4):
+### Modulo X - [Nome]
+
+"Il Modulo X ([Nome]) NON è trattato in questo manuale. Questa è una lacuna significativa perché [spiega perché è importante]. Per corsi che richiedono questo modulo, sarà necessario integrare con [suggerisci materiali]."
+
+Ora scrivi paragrafi discorsivi organizzati **PER MODULO**. All'interno di ogni sezione, CITA ESPLICITAMENTE ogni argomento della lista:
+
+### Modulo 1 - [Nome del modulo]
+
+Per ogni argomento specifico del framework in questo modulo (es: 1.1, 1.2, 1.3, 1.4):
 
 **SCRIVI UN PARAGRAFO NARRATIVO che menzioni ESPLICITAMENTE ciascun argomento:**
 
 Esempio di stile CORRETTO (menziona OGNI argomento):
-"Il manuale copre in modo eccellente l'**argomento 1.1**, con una trattazione approfondita nei capitoli iniziali (Cap. 1-2, p. 1-65). La progressione didattica e' chiara e ben strutturata, con esempi concreti che contestualizzano i concetti teorici.
+"Il manuale affronta l'**argomento 1.1** (Struttura atomica) in modo eccellente nel **Capitolo 1** (p. 1-45), con una trattazione approfondita degli orbitali e della tavola periodica. La progressione didattica è chiara e ben strutturata, con esempi concreti che contestualizzano i concetti teorici.
 
-Anche l'**argomento 1.2** e' trattato in modo particolarmente dettagliato (Cap. 5, p. 140-159), includendo non solo i concetti base ma anche approfondimenti avanzati, fondamentali per determinati corsi di laurea.
+L'**argomento 1.2** (Legami chimici) è trattato in modo particolarmente dettagliato nel **Capitolo 2** (p. 46-89), includendo non solo i concetti base (legame ionico, covalente) ma anche approfondimenti su ibridazione e geometria molecolare.
 
-L'**argomento 1.3** e' coperto nei capitoli 3-4 (p. 68-121) con un approccio che combina teoria e pratica. Tuttavia, la trattazione dell'**argomento 1.4** e' meno approfondita per quanto riguarda alcuni aspetti avanzati, che vengono solo accennati.
+L'**argomento 1.3** (Nomenclatura) è coperto nel **Capitolo 3** (p. 90-120) con un approccio pratico. Tuttavia, la trattazione dell'**argomento 1.4** (Isomeria) è meno approfondita per quanto riguarda l'isomeria ottica, che viene solo accennata.
 
-Si nota invece l'ASSENZA dell'**argomento 3.3**, probabilmente una scelta deliberata per mantenere il focus su altri temi, ma che limita l'uso del manuale in corsi avanzati che richiedono questa competenza."
+Si nota invece l'ASSENZA dell'**argomento 1.5** (Forze intermolecolari), probabilmente una scelta deliberata per mantenere il focus su altri temi, ma che limita l'uso del manuale in corsi avanzati."
+
+### Modulo 2 - [Nome del modulo]
+
+[Continua con TUTTI gli altri moduli...]
 
 ESEMPIO SBAGLIATO (troppo generico):
-"Il manuale copre i fondamenti della materia in modo eccellente, con vari argomenti trattati." Questo NON va bene! Devi specificare QUALE argomento (1.1, 1.2, 1.3, etc.)
+"Il manuale copre i fondamenti della materia in modo eccellente, con vari argomenti trattati." Questo NON va bene! Devi:
+1. Creare UNA SEZIONE per OGNI MODULO (### Modulo X - Nome)
+2. Menzionare OGNI argomento specifico (1.1, 1.2, 1.3, etc.)
 
 ## 3. PUNTI DI FORZA DEL MANUALE
 
@@ -1401,9 +1437,13 @@ Scrivi 2-3 paragrafi finali con:
 **VERIFICA FINALE:**
 
 Prima di consegnare l'analisi, controlla:
-- ✅ Hai elencato TUTTI gli argomenti del framework nello STEP 1?
-- ✅ Ogni argomento della lista è citato nell'analisi narrativa (STEP 2)?
-- ✅ Se un argomento è ASSENTE nel manuale, l'hai comunque menzionato nella sezione "Lacune"?
+- ✅ Hai scritto la frase "HO IDENTIFICATO [N] MODULI E [M] ARGOMENTI"?
+- ✅ Hai creato una sezione **### Modulo X - [Nome]** per OGNI MODULO del framework (anche se assente)?
+- ✅ Ogni argomento della lista è citato nell'analisi narrativa?
+- ✅ Se un modulo/argomento è ASSENTE nel manuale, l'hai comunque menzionato nella sezione "Lacune"?
+- ✅ Hai controllato che il NUMERO di sezioni ### Modulo corrisponda al numero di moduli dichiarati?
+
+**ATTENZIONE**: Se il framework ha 12 MODULI, devi avere 12 sezioni **### Modulo X - [Nome]** nel tuo report!
 
 **STILE E TONO:**
 - Scrivi come un **analista editoriale senior esperto**, non come un bot
