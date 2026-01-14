@@ -1,0 +1,24 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Framework pubblici: solo lettura
+    match /frameworks/{frameworkId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Manuali pubblici: solo lettura
+    match /manuals/{manualId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Analisi: lettura e scrittura pubblica (per cache)
+    match /analyses/{analysisId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # 📚 MAP - Manual Analyses Platform
 
-**Versione**: v1.15.0 "Libreria Framework Firebase - IN SVILUPPO"
+**Versione**: v1.15.3 "Libreria Framework e Manuali Firebase"
 
 Piattaforma web professionale per l'analisi automatica di manuali universitari rispetto a framework di valutazione, utilizzando l'intelligenza artificiale di OpenAI, Anthropic Claude e Perplexity AI.
 
@@ -16,6 +16,9 @@ Piattaforma web professionale per l'analisi automatica di manuali universitari r
 **Documentazione Completa:**
 - 📖 [README.md](README.md) - Questo file (documentazione principale)
 - 🔧 [Note Tecniche](NOTE-TECNICHE.md) - Dettagli tecnici per sviluppatori
+- 📚 [Guida Gestione Framework e Manuali](GUIDA-GESTIONE-FRAMEWORK-MANUALI.md) - **NUOVO!** Come aggiungere/modificare dati Firebase
+- 🚀 [Guida Deploy Produzione](GUIDA-DEPLOY-PRODUZIONE.md) - Workflow Git per deploy
+- 🔒 [Workflow Upload Sicuro](WORKFLOW-UPLOAD-SICURO.md) - Procedure sicurezza Firebase
 - ❓ [FAQ Framework CSV](FAQ-FRAMEWORK-CSV.md) - Tutto sul formato CSV
 - 📊 [Riepilogo Progetto](RIEPILOGO-PROGETTO.md) - Overview completo
 - 📝 [Changelog](CHANGELOG.md) - Versioni e roadmap
@@ -26,13 +29,25 @@ Piattaforma web professionale per l'analisi automatica di manuali universitari r
 
 ### ✅ Features Implementate
 
-1. **🆕 Libreria Framework Firebase (v1.15.0 - IN SVILUPPO)**
+1. **🆕 Libreria Framework Firebase (v1.15.0)**
    - **Dropdown framework precaricati**: Seleziona da ~50 framework già disponibili
    - **Filtro per materia**: Framework organizzati per disciplina
    - **Caricamento istantaneo**: Da 2 minuti → 10 secondi ⚡
    - **Fallback CSV custom**: Upload framework personalizzati sempre disponibile
    - Struttura dati: Collection `frameworks` su Firestore
    - Upload helper: `upload-frameworks-to-firebase.html`
+
+1bis. **🆕 Libreria Manuali Firebase (v1.15.3)**
+   - **Dropdown manuali precaricati**: Seleziona da ~80 manuali già disponibili
+   - **Filtri avanzati**: Materia, Editore, Autore
+   - **Ordinamento alfabetico**: Manuali ordinati per autore
+   - **Anteprima indice**: Visualizza capitoli e sezioni prima di analizzare
+   - **Supporto multi-volume**: Seleziona Volume 1 e Volume 2 separatamente
+   - **Caricamento istantaneo**: Da 1-2 minuti → 5-10 secondi ⚡
+   - **Fallback PDF custom**: Upload PDF personalizzati sempre disponibile
+   - Struttura dati: Collection `manuals` su Firestore
+   - Upload helper: `upload-manuals-to-firebase.html`
+   - **📚 [Guida completa](GUIDA-GESTIONE-FRAMEWORK-MANUALI.md)** per aggiungere/modificare manuali
 
 2. **Caricamento Multiplo di File**
    - Upload framework di valutazione in formato CSV (⭐ **qualsiasi struttura, qualsiasi materia!**)
